@@ -2,7 +2,7 @@
  * 8bit TFT Library for STM32F103
  * based on MCUFRIEND_kbv.cpp by David Prentice
  * https://github.com/prenticedavid/MCUFRIEND_kbv
- *
+ 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -19,10 +19,8 @@
 
 #include <STM32_TFT_8bit.h>
 #include <avr/pgmspace.h>
-#include <limits.h>
+//#include <limits.h>
 #include <libmaple/dma.h>
-#include "pins_arduino.h"
-#include "wiring_private.h"
 
 #define MIPI_DCS_REV1   (1<<0)
 #define AUTO_READINC    (1<<1)
@@ -48,7 +46,7 @@ STM32_TFT_8bit::STM32_TFT_8bit(void)
   
   //Set PB3 - PB7 as output
   //Note: CRH and CRL are both 32 bits wide
-  //Each pin is represented by 4 bits 0x3 (hex) sets that pin to O/P
+  //Each pin is represented by 5 bits 0x3 (hex) sets that pin to O/P
   TFT_CNTRL->regs->CRL = (TFT_CNTRL->regs->CRL & 0x00000FFF) | 0x33333000;
   CS_IDLE; // Disable CS
 //  CD_DATA; // Enable Command
@@ -754,6 +752,8 @@ void STM32_TFT_8bit::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, ui
   }
 }
 
+
+
 #if 0
 void STM32_TFT_8bit::drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color) {
 
@@ -1062,7 +1062,6 @@ void STM32_TFT_8bit::invertDisplay(boolean i) {
   #if _DEBUG_
   Serial.println("invertDisplay=" + String(_lcd_rev,HEX));
   #endif
-//  WriteCmdParamN(_lcd_rev ? 0x21 : 0x20, 0, NULL);
 
   if (_lcd_capable & MIPI_DCS_REV1) {
         if (is8347) {
@@ -1103,8 +1102,6 @@ void STM32_TFT_8bit::invertDisplay(boolean i) {
   }
 }
 
-
-////////// stuff not actively being used, but kept for posterity
 
 
 uint8_t STM32_TFT_8bit::read8(void){
@@ -1155,7 +1152,6 @@ uint16_t STM32_TFT_8bit::readReg16(uint16_t reg)
   if (!done_reset)
         reset();
 #endif
-//    CS_ACTIVE;
   setWriteDataBus();
   writeCmdWord(reg);
   setReadDataBus();
@@ -1173,7 +1169,6 @@ uint16_t STM32_TFT_8bit::readReg8(uint16_t reg, int8_t index)
   if (!done_reset)
         reset();
 #endif
-//    CS_ACTIVE;
   setWriteDataBus();
   writeCmdByte(reg);
   setReadDataBus();
@@ -1198,26 +1193,6 @@ uint32_t STM32_TFT_8bit::readReg40(uint16_t reg)
     uint16_t l = readReg8(reg, 2);
     return ((uint32_t) h << 24) | (m << 8) | (l >> 8);
 }
-
-#if 0
-uint32_t STM32_TFT_8bit::readID(void) {
-  setWriteDataBus();
-  writeCmdByte(0xD3);
-  setReadDataBus();
-  CS_ACTIVE;
-  CD_DATA;
-  uint32_t r = read8();
-  r <<= 8;
-  r |= read8();
-  r <<= 8;
-  r |= read8();
-  r <<= 8;
-  r |= read8();
-  CS_IDLE;
-  setWriteDataBus();
-  return r;
-}
-#endif
 
 
 uint16_t STM32_TFT_8bit::readID(void)

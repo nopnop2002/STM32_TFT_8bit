@@ -2,7 +2,7 @@
  * 8bit TFT Library for STM32F103
  * based on MCUFRIEND_kbv.cpp by David Prentice
  * https://github.com/prenticedavid/MCUFRIEND_kbv
- *
+ 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -59,7 +59,7 @@ If you use TFT of different resolution, change this.
 Define pins and Output Data Registers
 */
 
-//Data pins |D7 |D6 |D5 |D4 |D3 |D2 |D1 |D0 |
+//Port data |D7 |D6 |D5 |D4 |D3 |D2 |D1 |D0 |
 //Pin stm32 |PA7|PA6|PA5|PA4|PA3|PA2|PC1|PA0|
 //Control pins |RD |WR |RS |CS |RST|
 //Pin stm32    |PB3|PB4|PB5|PB6|PB7|
