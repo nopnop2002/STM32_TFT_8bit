@@ -1,6 +1,8 @@
 # STM32_TFT_8bit
 STM32 8bit TFT Library
 
+I ported from here.   
+https://github.com/prenticedavid/MCUFRIEND_kbv   
 
 # Wirering for 8bit Parallel TFT   
 
