@@ -1,6 +1,35 @@
 # STM32_TFT_8bit
 STM32 8bit TFT Library
 
+
+# Wirering for 8bit Parallel TFT   
+
+|TFT||STM32F103|
+|:-:|:-:|:-:|
+|LCD_RST|--|PB7|
+|LCD_CS|--|PB6|
+|LCD_RS|--|PB5|
+|LCD_WR|--|PB4|
+|LCD_RD|--|PB3|
+|LCD_D0|--|PA0|
+|LCD_D1|--|PA1|
+|LCD_D2|--|PA2|
+|LCD_D3|--|PA3|
+|LCD_D4|--|PA4|
+|LCD_D5|--|PA5|
+|LCD_D6|--|PA6|
+|LCD_D7|--|PA7|
+|5V|--|5V(*)|
+|3.3V|--|3.3V(*)|
+|GND|--|GND|
+
+\*When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
+\*When a regulator is NOT mounted on the back, it's operated 3.3V.   
+
+Pin define is "STM32_TFT_8bit.h"   
+
+---
+
 # R61505 2.4 inch TFT
 ![r61505](https://user-images.githubusercontent.com/6020549/34552852-70d1e6bc-f167-11e7-8df9-41587ebccc79.JPG)
 
