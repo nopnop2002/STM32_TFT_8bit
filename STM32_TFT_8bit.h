@@ -142,7 +142,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   void     WriteCmdParam4(uint8_t cmd, uint8_t d1, uint8_t d2, uint8_t d3, uint8_t d4);
   void     init_table(const void *table, int16_t size);
   void     init_table16(const void *table, int16_t size);
-  uint16_t _lcd_xor, _lcd_capable, _lcd_cmdWidth;
+  uint16_t _lcd_xor, _lcd_capable;
   uint16_t _lcd_ID, _lcd_rev, _lcd_madctl, _lcd_drivOut, _MC, _MP, _MW, _SC, _EC, _SP, _EP;
 
 };

@@ -121,8 +121,13 @@ void STM32_TFT_8bit::writeCmdWord(uint16_t c) {
 }
 
 void STM32_TFT_8bit::writeCmd(uint16_t c) {
-  if (_lcd_cmdWidth == 8) writeCmdByte(c & 0xff);
-  if (_lcd_cmdWidth == 16) writeCmdWord(c);
+//  if (_lcd_cmdWidth == 8) writeCmdByte(c & 0xff);
+//  if (_lcd_cmdWidth == 16) writeCmdWord(c);
+  if (_lcd_capable & MIPI_DCS_REV1) {
+	writeCmdByte(c & 0xff);
+  } else {
+	writeCmdWord(c);
+  }	
 }
 
 
@@ -237,7 +242,6 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
     case 0x9320:
         _lcd_capable = 0 | REV_SCREEN | READ_BGR;
       common_9320:
-        _lcd_cmdWidth = 16;
         static const uint16_t ILI9320_regValues[] PROGMEM = {
             0x00e5, 0x8000,
             0x0000, 0x0001,
@@ -315,7 +319,6 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
     case 0x9335:
         _lcd_capable = 0 | REV_SCREEN;
       common_93x5:
-        _lcd_cmdWidth = 16;
         static const uint16_t ILI9325_regValues[] PROGMEM = {
             0x00E5, 0x78F0,     // set SRAM internal timing
             0x0001, 0x0100,     // set Driver Output Control
@@ -381,7 +384,6 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 
    case 0x9341:
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS;
-      _lcd_cmdWidth = 8;
       static const uint8_t ILI9341_regValues_2_4[] PROGMEM = {        // BOE 2.4"
         0xF6, 3, 0x01, 0x01, 0x00,  //Interface Control needs EXTC=1 MV_EOR=0, TM=0, RIM=0
         0xCF, 3, 0x00, 0x81, 0x30,  //Power Control B [00 81 30]
@@ -410,7 +412,6 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
     
    case 0x9342:
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS | INVERT_GS | REV_SCREEN;
-      _lcd_cmdWidth = 8;
       static const uint8_t ILI9342_regValues_CPT24[] PROGMEM = {     //CPT 2.4"
         (0xB9), 3, 0xFF, 0x93, 0x42, //[00 00 00]
         (0xC0), 2, 0x1D, 0x0A,    //[26 09]
@@ -453,7 +454,6 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 
     case 0xB505:                //R61505V
     case 0xC505:                //R61505W
-        _lcd_cmdWidth = 16;
         _lcd_capable = 0 | REV_SCREEN | READ_LOWHIGH;
         static const uint16_t R61505V_regValues[] PROGMEM = {
             0x0000, 0x0000,
