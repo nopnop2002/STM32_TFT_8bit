@@ -1,2 +1,13 @@
 # STM32_TFT_8bit
 STM32 8bit TFT Library
+
+#R61505 2.4 inch TFT
+
+#SPFD5408 2.4 inch TFT
+
+#ILI9325 2.4 inch TFT
+
+#ILI9341 2.4 inch TFT
+
+#ILI9342 2.4 inch TFT
+
