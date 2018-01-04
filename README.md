@@ -6,7 +6,7 @@ STM32 8bit TFT Library
 
 ---
 
-#  SPFD5408 2.4 inch TFT
+# SPFD5408 2.4 inch TFT
 ![spfd5408](https://user-images.githubusercontent.com/6020549/34552862-7ae8d62e-f167-11e7-84dd-73b07476cd50.JPG)
 
 ---
