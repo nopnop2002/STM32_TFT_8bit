@@ -4,6 +4,15 @@ STM32 8bit TFT Library
 I ported from here.   
 https://github.com/prenticedavid/MCUFRIEND_kbv   
 
+----
+
+# Sofware requirement    
+
+Adafruit GFX Library   
+https://github.com/adafruit/Adafruit-GFX-Library   
+
+----
+
 # Wirering for 8bit Parallel TFT   
 
 |TFT||STM32F103|
