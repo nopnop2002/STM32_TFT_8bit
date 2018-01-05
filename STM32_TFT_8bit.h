@@ -102,25 +102,27 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   
   void     begin(uint16_t ID);
   void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
-  void     pushColor(uint16_t color);
   void     fillScreen(uint16_t color);
   void     drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color);
   void     drawPixel(int16_t x, int16_t y, uint16_t color);
+  void     pushColors8(uint8_t * block, int16_t n, bool first);
   void     pushColors(uint16_t * block, int16_t n, bool first);
   void     drawFastVLine(int16_t x, int16_t y, int16_t h, uint16_t color);
   void     drawFastHLine(int16_t x, int16_t y, int16_t w, uint16_t color);
   void     fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color);
+  uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
+  int16_t  readGRAM(int16_t x, int16_t y, uint16_t * block, int16_t w, int16_t h);
+  uint16_t readPixel(int16_t x, int16_t y) { uint16_t color; readGRAM(x, y, &color, 1, 1); return color; }
   void     setRotation(uint8_t r);
   void     vertScroll(int16_t top, int16_t scrollines, int16_t offset);
   void     invertDisplay(boolean i);
-  uint16_t color565(uint8_t r, uint8_t g, uint8_t b);
 
   /* These are not for current use, 8-bit protocol only! */
   //uint8_t  readdata(void),
-  uint8_t readcommand8(uint8_t reg); 
+  uint8_t  readcommand8(uint8_t reg); 
   uint16_t read16bits(void);
   uint16_t readReg16(uint16_t reg);
-  uint16_t readReg8(uint16_t reg, int8_t index);
+  uint16_t readReg16Index(uint16_t reg, int8_t index);
   uint32_t readReg32(uint16_t reg);
   uint32_t readReg40(uint16_t reg);
   uint16_t readID(void);
@@ -134,7 +136,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   void     write8(uint8_t);
   void     writeCmdByte(uint8_t c);
   void     writeCmdWord(uint16_t c);
-  void     writeCmd(uint16_t c);
+  void     WriteCmd(uint16_t c);
   void     writeDataByte(uint8_t d);
   void     writeDataWord(uint16_t d);
   void     WriteCmdData(uint16_t cmd, uint16_t dat);

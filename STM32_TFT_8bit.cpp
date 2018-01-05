@@ -120,7 +120,7 @@ void STM32_TFT_8bit::writeCmdWord(uint16_t c) {
   CS_IDLE;
 }
 
-void STM32_TFT_8bit::writeCmd(uint16_t c) {
+void STM32_TFT_8bit::WriteCmd(uint16_t c) {
 //  if (_lcd_cmdWidth == 8) writeCmdByte(c & 0xff);
 //  if (_lcd_cmdWidth == 16) writeCmdWord(c);
   if (_lcd_capable & MIPI_DCS_REV1) {
@@ -149,7 +149,7 @@ void STM32_TFT_8bit::writeDataWord(uint16_t c) {
 
 
 void STM32_TFT_8bit::WriteCmdData(uint16_t cmd, uint16_t dat) {
-  writeCmd(cmd);
+  WriteCmd(cmd);
   writeDataWord(dat);
 }
 
@@ -579,34 +579,9 @@ void STM32_TFT_8bit::setAddrWindow(uint16_t x, uint16_t y, uint16_t x1, uint16_t
     WriteCmdData(_EC, x1);
     WriteCmdData(_EP, y1);
   }
-//  writeCmd(_MW); // write to RAM
+//  WriteCmd(_MW); // write to RAM
 
 }
-
-#if 0
-void STM32_TFT_8bit::fillRect(int16_t x, int16_t y, int16_t w, int16_t h,
-                                   uint16_t color) {
-
-  // rudimentary clipping (drawChar w/big text requires this)
-  if ((x >= _width) || (y >= _height || h < 1 || w < 1)) return;
-  if ((x + w - 1) >= _width)  w = _width  - x;
-  if ((y + h - 1) >= _height) h = _height - y;
-
-  if (w == 1 && h == 1) {
-    drawPixel(x, y, color);
-    return;
-  }
-  
-  setAddrWindow(x, y, x + w - 1, y + h - 1);
-  WriteCmd(_MW);
-  for(y=0; y<h; y++) {
-    for(x=0; x<w; x++){
-      writeDataWord(color);
-    }
-  }
-}
-#endif
-
 
 void STM32_TFT_8bit::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16_t color)
 {
@@ -633,7 +608,7 @@ void STM32_TFT_8bit::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16
     h = end - y;
 
     setAddrWindow(x, y, x + w - 1, y + h - 1);
-    writeCmd(_MW);
+    WriteCmd(_MW);
     if (h > w) {
         end = h;
         h = w;
@@ -651,17 +626,36 @@ void STM32_TFT_8bit::fillRect(int16_t x, int16_t y, int16_t w, int16_t h, uint16
 
 
 
+void STM32_TFT_8bit::pushColors8(uint8_t * block, int16_t n, bool first)
+{
+    uint16_t color;
+    uint8_t h, l;
+
+    if (first) {
+      WriteCmd(_MW);
+    }
+    while (n-- > 0) {
+        h = (*block++);
+        l = (*block++);
+        color = h << 8 | l;
+        writeDataWord(color);
+    }
+}
+
 void STM32_TFT_8bit::pushColors(uint16_t * block, int16_t n, bool first)
 {
     uint16_t color;
+    uint8_t h, l;
+
     if (first) {
-      writeCmd(_MW);
+      WriteCmd(_MW);
     }
     while (n-- > 0) {
-      color = *block++;
-      writeDataWord(color);
+        color = (*block++);
+        writeDataWord(color);
     }
 }
+
 
 
 void STM32_TFT_8bit::drawFastVLine(int16_t x, int16_t y, int16_t h,
@@ -752,130 +746,75 @@ void STM32_TFT_8bit::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, ui
   }
 }
 
-
-
-#if 0
-void STM32_TFT_8bit::drawLine(int16_t x0, int16_t y0,int16_t x1, int16_t y1, uint16_t color) {
-
-	if ((y0 < 0 && y1 <0) || (y0 > _height && y1 > _height)) return;
-	if ((x0 < 0 && x1 <0) || (x0 > _width && x1 > _width)) return;
-	if (x0 < 0) x0 = 0;
-	if (x1 < 0) x1 = 0;
-	if (y0 < 0) y0 = 0;
-	if (y1 < 0) y1 = 0;
-
-    Serial.println("drawLine:x0=" + String(x0) + " x1=" + String(x1) + " y0=" + String(y0) + " y1=" + String(y1));
-
-	if (y0 == y1) {
-		if (x1 > x0) {
-			drawFastHLine(x0, y0, x1 - x0 + 1, color);
-		}
-		else if (x1 < x0) {
-			drawFastHLine(x1, y0, x0 - x1 + 1, color);
-		}
-		else { //x0==x1 and y0==y1
-			drawPixel(x0, y0, color);
-		}
-		return;
-	}
-	else if (x0 == x1) {
-		if (y1 > y0) {
-			drawFastVLine(x0, y0, y1 - y0 + 1, color);
-		}
-		else {
-			drawFastVLine(x0, y1, y0 - y1 + 1, color);
-		}
-		return;
-	}
-
-    int steep = 0;
-//	bool steep = abs(y1 - y0) > abs(x1 - x0);
-	if (abs(y1 - y0) > abs(x1 - x0)) steep = 1;
-    Serial.println("drawLine:steep=" + String(steep));
-	if (steep) {
-		swap(x0, y0);
-		swap(x1, y1);
-	}
-	if (x0 > x1) {
-		swap(x0, x1);
-		swap(y0, y1);
-	}
-
-	int16_t dx, dy;
-	dx = x1 - x0;
-	dy = abs(y1 - y0);
-
-	int16_t err = dx / 2;
-	int16_t ystep;
-
-	if (y0 < y1) {
-		ystep = 1;
-	}
-	else {
-		ystep = -1;
-	}
-
-
-	int16_t xbegin = x0;
-//	lineBuffer[0] = color;
-	//*csport &= ~cspinmask;
-	if (steep) {
-		for (; x0 <= x1; x0++) {
-			err -= dy;
-			if (err < 0) {
-				int16_t len = x0 - xbegin;
-				if (len) {
-					drawFastVLine (y0, xbegin, len + 1, color);
-					//writeVLine_cont_noCS_noFill(y0, xbegin, len + 1);
-				}
-				else {
-					drawPixel(y0, x0, color);
-					//writePixel_cont_noCS(y0, x0, color);
-				}
-				xbegin = x0 + 1;
-				y0 += ystep;
-				err += dx;
-			}
-		}
-		if (x0 > xbegin + 1) {
-			//writeVLine_cont_noCS_noFill(y0, xbegin, x0 - xbegin);
-			drawFastVLine(y0, xbegin, x0 - xbegin, color);
-		}
-
-	}
-	else {
-		for (; x0 <= x1; x0++) {
-			err -= dy;
-			if (err < 0) {
-				int16_t len = x0 - xbegin;
-				if (len) {
-					drawFastHLine(xbegin, y0, len + 1, color);
-					//writeHLine_cont_noCS_noFill(xbegin, y0, len + 1);
-				}
-				else {
-					drawPixel(x0, y0, color);
-					//writePixel_cont_noCS(x0, y0, color);
-				}
-				xbegin = x0 + 1;
-				y0 += ystep;
-				err += dx;
-			}
-		}
-		if (x0 > xbegin + 1) {
-			//writeHLine_cont_noCS_noFill(xbegin, y0, x0 - xbegin);
-			drawFastHLine(xbegin, y0, x0 - xbegin, color);
-		}
-	}
-	//*csport |= cspinmask;
-}
-#endif
-
 #endif
 
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed color
 uint16_t STM32_TFT_8bit::color565(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
+}
+
+
+// independent cursor and window registers.   ILI9341/9342 auto increments.  ILI9320/9325 do not.  
+// VERY VERY SLOW !!
+int16_t STM32_TFT_8bit::readGRAM(int16_t x, int16_t y, uint16_t * block, int16_t w, int16_t h)
+{
+    uint16_t ret, dummy, _MR = _MW;
+    int16_t n = w * h, row = 0, col = 0;
+    uint8_t r, g, b, tmp;
+    if (!is8347 && _lcd_capable & MIPI_DCS_REV1) // HX8347 uses same register
+        _MR = 0x2E;
+    setAddrWindow(x, y, x + w - 1, y + h - 1);
+    while (n > 0) {
+        if (!(_lcd_capable & MIPI_DCS_REV1)) {
+            WriteCmdData(_MC, x + col);
+            WriteCmdData(_MP, y + row);
+        }
+        WriteCmd(_MR);
+        setReadDataBus();
+        CS_ACTIVE;
+        CD_DATA;
+        if (_lcd_capable & READ_NODUMMY) {
+            ;
+        } else if ((_lcd_capable & MIPI_DCS_REV1) || _lcd_ID == 0x1289) {
+            r=read8();
+        } else {
+            dummy=read16bits();
+        }
+		if (_lcd_ID == 0x1511) r=read8();   //extra dummy for R61511
+        while (n) {
+            if (_lcd_capable & READ_24BITS) {
+                r=read8();
+                g=read8();
+                b=read8();
+                if (_lcd_capable & READ_BGR)
+                    ret = color565(b, g, r);
+                else
+                    ret = color565(r, g, b);
+            } else {
+                ret=read16bits();
+                if (_lcd_capable & READ_LOWHIGH)
+                    ret = (ret >> 8) | (ret << 8);
+                if (_lcd_capable & READ_BGR)
+                    ret = (ret & 0x07E0) | (ret >> 11) | (ret << 11);
+            }
+            *block++ = ret;
+            n--;
+            if (!(_lcd_capable & AUTO_READINC))
+                break;
+        }
+        if (++col >= w) {
+            col = 0;
+            if (++row >= h)
+                row = 0;
+        }
+        RD_IDLE;
+//        CS_IDLE;
+        setWriteDataBus();
+    }
+    if (!(_lcd_capable & MIPI_DCS_REV1))
+        setAddrWindow(0, 0, width() - 1, height() - 1);
+    return 0;
 }
 
 
@@ -985,11 +924,6 @@ void STM32_TFT_8bit::setRotation(uint8_t r) {
 
 void STM32_TFT_8bit::vertScroll(int16_t top, int16_t scrollines, int16_t offset)
 {
-#if defined(OFFSET_9327)
-	if (_lcd_ID == 0x9327) {
-	    if (rotation == 2 || rotation == 3) top += OFFSET_9327;
-    }
-#endif
     int16_t bfa = HEIGHT - top - scrollines;  // bottom fixed area
     int16_t vsp;
     int16_t sea = top;
@@ -1001,19 +935,6 @@ void STM32_TFT_8bit::vertScroll(int16_t top, int16_t scrollines, int16_t offset)
     sea = top + scrollines - 1;
     if (_lcd_capable & MIPI_DCS_REV1) {
         uint8_t d[6];           // for multi-byte parameters
-/*
-        if (_lcd_ID == 0x9327) {        //panel is wired for 240x432 
-            if (rotation == 2 || rotation == 3) { //180 or 270 degrees
-                if (scrollines == HEIGHT) {
-                    scrollines = 432;   // we get a glitch but hey-ho
-                    vsp -= 432 - HEIGHT;
-                }
-                if (vsp < 0)
-                    vsp += 432;
-            }
-            bfa = 432 - top - scrollines;
-        }
-*/
         d[0] = top >> 8;        //TFA
         d[1] = top;
         d[2] = scrollines >> 8; //VSA
@@ -1032,25 +953,28 @@ void STM32_TFT_8bit::vertScroll(int16_t top, int16_t scrollines, int16_t offset)
 			WriteCmdParamN(0x13, 0, NULL);    //NORMAL i.e. disable scroll
 		}
 		return;
-    }
-    // cope with 9320 style variants:
-    switch (_lcd_ID) {
-    case 0x7783:
-        WriteCmdData(0x61, _lcd_rev);   //!NDL, !VLE, REV
-        WriteCmdData(0x6A, vsp);        //VL#
-        break;
-	case 0x5420:
-    case 0x7793:
-	case 0x9326:
-	case 0xB509:
-        WriteCmdData(0x401, (1 << 1) | _lcd_rev);       //VLE, REV 
-        WriteCmdData(0x404, vsp);       //VL# 
-        break;
-    default:
-        // 0x6809, 0x9320, 0x9325, 0x9335, 0xB505 can only scroll whole screen
-        WriteCmdData(0x61, (1 << 1) | _lcd_rev);        //!NDL, VLE, REV
-        WriteCmdData(0x6A, vsp);        //VL#
-        break;
+    } else {
+//        Serial.println("top=" + String(top) + " vsp=" + String(vsp));
+        if (top != 0) return;
+        // cope with 9320 style variants:
+        switch (_lcd_ID) {
+          case 0x7783:
+            WriteCmdData(0x61, _lcd_rev);   //!NDL, !VLE, REV
+            WriteCmdData(0x6A, vsp);        //VL#
+            break;
+	      case 0x5420:
+          case 0x7793:
+	      case 0x9326:
+	      case 0xB509:
+            WriteCmdData(0x401, (1 << 1) | _lcd_rev);       //VLE, REV 
+            WriteCmdData(0x404, vsp);       //VL# 
+            break;
+          default:
+            // 0x6809, 0x9320, 0x9325, 0x9335, 0xB505 can only scroll whole screen
+            WriteCmdData(0x61, (1 << 1) | _lcd_rev);        //!NDL, VLE, REV
+            WriteCmdData(0x6A, vsp);        //VL#
+            break;
+        }
     }
 }
 
@@ -1161,7 +1085,7 @@ uint16_t STM32_TFT_8bit::readReg16(uint16_t reg)
   return ret;
 }
 
-uint16_t STM32_TFT_8bit::readReg8(uint16_t reg, int8_t index)
+uint16_t STM32_TFT_8bit::readReg16Index(uint16_t reg, int8_t index)
 {
   uint16_t ret;
   uint8_t lo;
@@ -1181,16 +1105,16 @@ uint16_t STM32_TFT_8bit::readReg8(uint16_t reg, int8_t index)
 
 uint32_t STM32_TFT_8bit::readReg32(uint16_t reg)
 {
-    uint16_t h = readReg8(reg, 0);
-    uint16_t l = readReg8(reg, 1);
+    uint16_t h = readReg16Index(reg, 0);
+    uint16_t l = readReg16Index(reg, 1);
     return ((uint32_t) h << 16) | (l);
 }
 
 uint32_t STM32_TFT_8bit::readReg40(uint16_t reg)
 {
-    uint16_t h = readReg8(reg, 0);
-    uint16_t m = readReg8(reg, 1);
-    uint16_t l = readReg8(reg, 2);
+    uint16_t h = readReg16Index(reg, 0);
+    uint16_t m = readReg16Index(reg, 1);
+    uint16_t l = readReg16Index(reg, 2);
     return ((uint32_t) h << 24) | (m << 8) | (l >> 8);
 }
 
