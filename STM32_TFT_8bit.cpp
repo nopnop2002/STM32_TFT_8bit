@@ -236,7 +236,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 
 
   _lcd_ID = ID;
-   switch (_lcd_ID = ID) {
+  switch (_lcd_ID) {
 
     case 0x1505:                //R61505 thanks Ravi_kanchan2004. R61505V, R61505W different
     case 0x9320:
