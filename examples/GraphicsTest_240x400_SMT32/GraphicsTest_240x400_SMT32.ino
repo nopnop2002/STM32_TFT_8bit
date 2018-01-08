@@ -32,7 +32,9 @@ void setup() {
 
   ID = tft.readID();
 //   Set your TFT's resolution
-//   tft.setResolution(320, 480);
+  tft.setResolution(240, 400); // Set your resolution
+//   Set your TFT's offset
+  tft.setOffset(32);  // Set your offset
   Serial.print("Device ID: 0x"); Serial.println(ID, HEX);
   tft.begin(ID);
 

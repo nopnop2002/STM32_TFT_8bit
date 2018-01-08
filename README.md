@@ -67,10 +67,21 @@ Pin define is "STM32_TFT_8bit.h"
 
 ----
 
+# Tested TFT    
+ILI9325 2.4inch 240x320   
+ILI9341 2.4inch 240x320   
+ILI9342 2.4inch 240x320   
+SPFD5408 2.4inch 240x320   
+R61505 2.4inch 240x320   
+ILI9481 3.5inch 320x480   
+R61509V 3.6inch 240x400   
+
+----
+
 # Setting your TFT's resolution    
 
-If your TFT's resolution is NOT 240x320,   
-you can set your TFT's resolution using tft.setResoution.   
+If your TFT's resolution is 320x480,   
+you have to set your TFT's resolution using tft.setResoution.   
 
 Exsample:   
 ```
@@ -82,6 +93,22 @@ uint32_t width = tft.width();
 Serial.print("Width: "); Serial.println(width); // You will see 320
 uint32_t height = tft.height();
 Serial.print("Height: "); Serial.println(height); // You will see 480
+```
+
+If your TFT's resolution is 240x400,   
+you have to set your TFT's resolution and TFT's offset.   
+
+Exsample:   
+```
+ID = tft.readID();
+tft.setResolution(240, 400); // Set your resolution
+tft.setOffset(32); // Set your offset
+Serial.print("Device ID: 0x"); Serial.println(ID, HEX);
+tft.begin(ID);
+uint32_t width = tft.width();
+Serial.print("Width: "); Serial.println(width); // You will see 240
+uint32_t height = tft.height();
+Serial.print("Height: "); Serial.println(height); // You will see 400
 ```
 
 ---

@@ -59,11 +59,11 @@ If you use TFT of different resolution, change this.
 Define pins and Output Data Registers
 */
 
-#define TFT_DATA       GPIOA
+//#define TFT_DATA       GPIOA
 //Port data |D7 |D6 |D5 |D4 |D3 |D2 |D1 |D0 |
 //Pin stm32 |PA7|PA6|PA5|PA4|PA3|PA2|PA1|PA0|
 
-//#define TFT_DATA       GPIOC
+#define TFT_DATA       GPIOC
 //Port data |D7 |D6 |D5 |D4 |D3 |D2 |D1 |D0 |
 //Pin stm32 |PC7|PC6|PC5|PC4|PC3|PC2|PC1|PC0|
 
@@ -106,6 +106,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   STM32_TFT_8bit(void);
   
   void     setResolution(int16_t width, int16_t height);
+  void     setOffset(int16_t offset);
   void     begin(uint16_t ID);
   void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
   void     fillScreen(uint16_t color);
@@ -152,7 +153,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   void     init_table16(const void *table, int16_t size);
   uint16_t _lcd_xor, _lcd_capable;
   uint16_t _lcd_ID, _lcd_rev, _lcd_madctl, _lcd_drivOut, _MC, _MP, _MW, _SC, _EC, _SP, _EP;
-  int16_t  _lcd_width = 0, _lcd_height = 0;
+  int16_t  _lcd_width = 0, _lcd_height = 0, _lcd_offset=0;
 };
 
 #endif //endif of the header file

@@ -210,6 +210,11 @@ void STM32_TFT_8bit::setResolution(int16_t width, int16_t height) {
     _lcd_height = height;
 }
 
+
+void STM32_TFT_8bit::setOffset(int16_t offset) {
+    _lcd_offset = offset;
+}
+
 // Rather than a bazillion writeCmdByte() and writeDataByte() calls, screen
 // initialization commands and arguments are organized in these tables
 // stored in PROGMEM.  The table may look bulky, but that's mostly the
@@ -228,6 +233,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
   setWriteDataBus();
 
   Serial.println("_lcd_width=" + String(_lcd_width) + " _lcd_height=" + String(_lcd_height));
+  Serial.println("_lcd_offset=" + String(_lcd_offset));
 #if 0
   // toggle RST low to reset
   TFT_CNTRL->regs->CRH = (TFT_CNTRL->regs->CRH & 0xFFFFFFF0) | 0x00000003; 
@@ -444,6 +450,71 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
         break;
 
 
+
+    case 0x7793:
+    case 0xB509:
+        _lcd_capable = REV_SCREEN;
+        static const uint16_t R61509V_regValues[] PROGMEM = {
+            0x0000, 0x0000,
+            0x0000, 0x0000,
+            0x0000, 0x0000,
+            0x0000, 0x0000,
+            TFTLCD_DELAY, 15,
+            0x0400, 0x6200,     //NL=0x31 (49) i.e. 400 rows
+            0x0008, 0x0808,
+            //gamma
+            0x0300, 0x0C00,
+            0x0301, 0x5A0B,
+            0x0302, 0x0906,
+            0x0303, 0x1017,
+            0x0304, 0x2300,
+            0x0305, 0x1700,
+            0x0306, 0x6309,
+            0x0307, 0x0C09,
+            0x0308, 0x100C,
+            0x0309, 0x2232,
+
+            0x0010, 0x0016,     //69.5Hz         0016
+            0x0011, 0x0101,
+            0x0012, 0x0000,
+            0x0013, 0x0001,
+
+            0x0100, 0x0330,     //BT,AP
+            0x0101, 0x0237,     //DC0,DC1,VC
+            0x0103, 0x0D00,     //VDV
+            0x0280, 0x6100,     //VCM
+            0x0102, 0xC1B0,     //VRH,VCMR,PSON,PON
+            TFTLCD_DELAY, 50,
+
+            0x0001, 0x0100,
+            0x0002, 0x0100,
+            0x0003, 0x1030,     //1030
+            0x0009, 0x0001,
+            0x000C, 0x0000,
+            0x0090, 0x8000,
+            0x000F, 0x0000,
+
+            0x0210, 0x0000,
+            0x0211, 0x00EF,
+            0x0212, 0x0000,
+            0x0213, 0x018F,     //432=01AF,400=018F
+            0x0500, 0x0000,
+            0x0501, 0x0000,
+            0x0502, 0x005F,     //???
+            0x0401, 0x0001,     //REV=1
+            0x0404, 0x0000,
+            TFTLCD_DELAY, 50,
+
+            0x0007, 0x0100,     //BASEE
+            TFTLCD_DELAY, 50,
+
+            0x0200, 0x0000,
+            0x0201, 0x0000,
+        };
+        init_table16(R61509V_regValues, sizeof(R61509V_regValues));
+        break;
+
+
    case 0x9341:
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS;
       static const uint8_t ILI9341_regValues_2_4[] PROGMEM = {        // BOE 2.4"
@@ -651,6 +722,10 @@ void STM32_TFT_8bit::drawPixel(int16_t x, int16_t y, uint16_t color)
     // MCUFRIEND just plots at edge if you try to write outside of the box:
   if (x < 0 || y < 0 || x >= width() || y >= height())
         return;
+  if (_lcd_offset) {
+    if (rotation == 2) y += _lcd_offset;
+    if (rotation == 3) x += _lcd_offset;
+  }
 
   #ifdef _DEBUG_
   Serial.print("drawPixel:x=" + String(x) + " y=" + String(y) + " color=" + String(color,HEX));
@@ -672,6 +747,20 @@ void STM32_TFT_8bit::drawPixel(int16_t x, int16_t y, uint16_t color)
 
 void STM32_TFT_8bit::setAddrWindow(uint16_t x, uint16_t y, uint16_t x1, uint16_t y1)
 {
+
+//  Serial.println("x=" + String(x) + " y=" + String(y));
+//  Serial.println("x1=" + String(x1) + " y1=" + String(y1));
+  if (_lcd_offset) {
+    if (rotation == 2) {
+      y += _lcd_offset;
+      y1 += _lcd_offset;
+    }
+    if (rotation == 3) {
+      x += _lcd_offset;
+      x1 += _lcd_offset;
+    }
+  }
+
   if (_lcd_capable & MIPI_DCS_REV1) {
     WriteCmdParam4(_MC, x >> 8, x, x1 >> 8, x1);
     WriteCmdParam4(_MP, y >> 8, y, y1 >> 8, y1);
@@ -1066,6 +1155,9 @@ void STM32_TFT_8bit::setRotation(uint8_t r) {
 
 void STM32_TFT_8bit::vertScroll(int16_t top, int16_t scrollines, int16_t offset)
 {
+    if (_lcd_offset) {
+      if (rotation == 2 || rotation == 3) top += _lcd_offset;
+    }
     int16_t bfa = HEIGHT - top - scrollines;  // bottom fixed area
     int16_t vsp;
     int16_t sea = top;
