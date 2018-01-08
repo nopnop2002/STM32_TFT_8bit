@@ -31,6 +31,8 @@ void setup() {
   Serial.println("STM32_TFT_8bit Test!"); 
 
   ID = tft.readID();
+//   Set your TFT's resolution
+//   tft.setResolution(320, 480);
   Serial.print("Device ID: 0x"); Serial.println(ID, HEX);
   tft.begin(ID);
 
