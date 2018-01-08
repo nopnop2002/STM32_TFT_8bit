@@ -6,7 +6,7 @@ https://github.com/prenticedavid/MCUFRIEND_kbv
 
 ----
 
-# Sofware requirement    
+# Software requirement    
 
 Adafruit GFX Library   
 https://github.com/adafruit/Adafruit-GFX-Library   
