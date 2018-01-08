@@ -53,9 +53,9 @@ tft.setResolution(320, 480); // Set your resolution
 Serial.print("Device ID: 0x"); Serial.println(ID, HEX);
 tft.begin(ID);
 uint32_t width = tft.width();
-Serial.print("Width: "); Serial.println(width);
+Serial.print("Width: "); Serial.println(width); // You will see 320
 uint32_t height = tft.height();
-Serial.print("Height: "); Serial.println(height);
+Serial.print("Height: "); Serial.println(height); // You will see 480
 ```
 
 ---
