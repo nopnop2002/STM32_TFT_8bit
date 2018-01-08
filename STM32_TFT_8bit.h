@@ -100,6 +100,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
 
   STM32_TFT_8bit(void);
   
+  void     setResolution(int16_t width, int16_t height);
   void     begin(uint16_t ID);
   void     setAddrWindow(uint16_t x0, uint16_t y0, uint16_t x1, uint16_t y1);
   void     fillScreen(uint16_t color);
@@ -146,7 +147,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   void     init_table16(const void *table, int16_t size);
   uint16_t _lcd_xor, _lcd_capable;
   uint16_t _lcd_ID, _lcd_rev, _lcd_madctl, _lcd_drivOut, _MC, _MP, _MW, _SC, _EC, _SP, _EP;
-
+  int16_t  _lcd_width = 0, _lcd_height = 0;
 };
 
 #endif //endif of the header file

@@ -39,6 +39,23 @@ https://github.com/adafruit/Adafruit-GFX-Library
 
 Pin define is "STM32_TFT_8bit.h"   
 
+----
+
+# Setting your resolution    
+
+If your TFT's resolution is NOT 240x320,   
+you can set your TFT's resolution using tft.setResoution.   
+
+Exsample:   
+`  ID = tft.readID();`
+`  tft.setResolution(320, 480);`
+`  Serial.print("Device ID: 0x"); Serial.println(ID, HEX);`
+`  tft.begin(ID);`
+`  uint32_t width = tft.width();`
+`  Serial.print("Width: "); Serial.println(width);`
+`  uint32_t height = tft.height();`
+`  Serial.print("Height: "); Serial.println(height);`
+
 ---
 
 # R61505 2.4 inch TFT

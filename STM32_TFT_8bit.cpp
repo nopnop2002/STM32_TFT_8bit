@@ -205,6 +205,10 @@ void STM32_TFT_8bit::init_table16(const void *table, int16_t size) {
     }
 }
 
+void STM32_TFT_8bit::setResolution(int16_t width, int16_t height) {
+    _lcd_width = width;
+    _lcd_height = height;
+}
 
 // Rather than a bazillion writeCmdByte() and writeDataByte() calls, screen
 // initialization commands and arguments are organized in these tables
@@ -223,6 +227,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
   //set up 8 bit parallel port to write mode.
   setWriteDataBus();
 
+  Serial.println("_lcd_width=" + String(_lcd_width) + " _lcd_height=" + String(_lcd_height));
 #if 0
   // toggle RST low to reset
   TFT_CNTRL->regs->CRH = (TFT_CNTRL->regs->CRH & 0xFFFFFFF0) | 0x00000003; 
@@ -382,6 +387,63 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
         init_table16(ILI9325_regValues, sizeof(ILI9325_regValues));
         break;
 
+    case 0xB505:                //R61505V
+    case 0xC505:                //R61505W
+        _lcd_capable = 0 | REV_SCREEN | READ_LOWHIGH;
+        static const uint16_t R61505V_regValues[] PROGMEM = {
+            0x0000, 0x0000,
+            0x0000, 0x0000,
+            0x0000, 0x0000,
+            0x0000, 0x0001,
+            0x00A4, 0x0001,     //CALB=1
+            TFTLCD_DELAY, 10,
+            0x0060, 0x2700,     //NL
+            0x0008, 0x0808,     //FP & BP
+            0x0030, 0x0214,     //Gamma settings
+            0x0031, 0x3715,
+            0x0032, 0x0604,
+            0x0033, 0x0E16,
+            0x0034, 0x2211,
+            0x0035, 0x1500,
+            0x0036, 0x8507,
+            0x0037, 0x1407,
+            0x0038, 0x1403,
+            0x0039, 0x0020,
+            0x0090, 0x0015,     //DIVI & RTNI
+            0x0010, 0x0410,     //BT=4,AP=1
+            0x0011, 0x0237,     //DC1=2,DC0=3, VC=7
+            0x0029, 0x0046,     //VCM1=70
+            0x002A, 0x0046,     //VCMSEL=0,VCM2=70
+            // Sleep mode IN sequence
+            0x0007, 0x0000,
+            //0x0012, 0x0000,   //PSON=0,PON=0
+            // Sleep mode EXIT sequence 
+            0x0012, 0x0189,     //VCMR=1,PSON=0,PON=0,VRH=9
+            0x0013, 0x1100,     //VDV=17
+            TFTLCD_DELAY, 150,
+            0x0012, 0x01B9,     //VCMR=1,PSON=1,PON=1,VRH=9 [018F]
+            0x0001, 0x0100,     //SS=1 Other mode settings
+            0x0002, 0x0200,     //BC0=1--Line inversion
+            0x0003, 0x1030,
+            0x0009, 0x0001,     //ISC=1 [0000]
+            0x000A, 0x0000,     // [0000]
+            //            0x000C, 0x0001,   //RIM=1 [0000]
+            0x000D, 0x0000,     // [0000]
+            0x000E, 0x0030,     //VEM=3 VCOM equalize [0000]
+            0x0061, 0x0001,
+            0x006A, 0x0000,
+            0x0080, 0x0000,
+            0x0081, 0x0000,
+            0x0082, 0x005F,
+            0x0092, 0x0100,
+            0x0093, 0x0701,
+            TFTLCD_DELAY, 80,
+            0x0007, 0x0100,     //BASEE=1--Display On
+        };
+        init_table16(R61505V_regValues, sizeof(R61505V_regValues));
+        break;
+
+
    case 0x9341:
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS;
       static const uint8_t ILI9341_regValues_2_4[] PROGMEM = {        // BOE 2.4"
@@ -452,63 +514,111 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
       *p16 = 320;
     break;
 
-    case 0xB505:                //R61505V
-    case 0xC505:                //R61505W
-        _lcd_capable = 0 | REV_SCREEN | READ_LOWHIGH;
-        static const uint16_t R61505V_regValues[] PROGMEM = {
-            0x0000, 0x0000,
-            0x0000, 0x0000,
-            0x0000, 0x0000,
-            0x0000, 0x0001,
-            0x00A4, 0x0001,     //CALB=1
-            TFTLCD_DELAY, 10,
-            0x0060, 0x2700,     //NL
-            0x0008, 0x0808,     //FP & BP
-            0x0030, 0x0214,     //Gamma settings
-            0x0031, 0x3715,
-            0x0032, 0x0604,
-            0x0033, 0x0E16,
-            0x0034, 0x2211,
-            0x0035, 0x1500,
-            0x0036, 0x8507,
-            0x0037, 0x1407,
-            0x0038, 0x1403,
-            0x0039, 0x0020,
-            0x0090, 0x0015,     //DIVI & RTNI
-            0x0010, 0x0410,     //BT=4,AP=1
-            0x0011, 0x0237,     //DC1=2,DC0=3, VC=7
-            0x0029, 0x0046,     //VCM1=70
-            0x002A, 0x0046,     //VCMSEL=0,VCM2=70
-            // Sleep mode IN sequence
-            0x0007, 0x0000,
-            //0x0012, 0x0000,   //PSON=0,PON=0
-            // Sleep mode EXIT sequence 
-            0x0012, 0x0189,     //VCMR=1,PSON=0,PON=0,VRH=9
-            0x0013, 0x1100,     //VDV=17
-            TFTLCD_DELAY, 150,
-            0x0012, 0x01B9,     //VCMR=1,PSON=1,PON=1,VRH=9 [018F]
-            0x0001, 0x0100,     //SS=1 Other mode settings
-            0x0002, 0x0200,     //BC0=1--Line inversion
-            0x0003, 0x1030,
-            0x0009, 0x0001,     //ISC=1 [0000]
-            0x000A, 0x0000,     // [0000]
-            //            0x000C, 0x0001,   //RIM=1 [0000]
-            0x000D, 0x0000,     // [0000]
-            0x000E, 0x0030,     //VEM=3 VCOM equalize [0000]
-            0x0061, 0x0001,
-            0x006A, 0x0000,
-            0x0080, 0x0000,
-            0x0081, 0x0000,
-            0x0082, 0x005F,
-            0x0092, 0x0100,
-            0x0093, 0x0701,
-            TFTLCD_DELAY, 80,
-            0x0007, 0x0100,     //BASEE=1--Display On
+    case 0x1581:                        //no BGR in MADCTL.  set BGR in Panel Control
+        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS; //thanks zdravke
+		goto common_9481;
+    case 0x9481:
+        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_BGR;
+	  common_9481:
+        static const uint8_t ILI9481_regValues[] PROGMEM = {    // Atmel MaxTouch
+            0xB0, 1, 0x00,              // unlocks E0, F0
+            0xB3, 4, 0x02, 0x00, 0x00, 0x00, //Frame Memory, interface [02 00 00 00]
+			0xB4, 1, 0x00,              // Frame mode [00]
+			0xD0, 3, 0x07, 0x42, 0x18,  // Set Power [00 43 18] x1.00, x6, x3
+            0xD1, 3, 0x00, 0x07, 0x10,  // Set VCOM  [00 00 00] x0.72, x1.02
+            0xD2, 2, 0x01, 0x02,        // Set Power for Normal Mode [01 22]
+            0xD3, 2, 0x01, 0x02,        // Set Power for Partial Mode [01 22]
+            0xD4, 2, 0x01, 0x02,        // Set Power for Idle Mode [01 22]
+            0xC0, 5, 0x12, 0x3B, 0x00, 0x02, 0x11, //Panel Driving BGR for 1581 [10 3B 00 02 11]
+            0xC1, 3, 0x10, 0x10, 0x88,  // Display Timing Normal [10 10 88]
+			0xC5, 1, 0x03,      //Frame Rate [03]
+			0xC6, 1, 0x02,      //Interface Control [02]
+            0xC8, 12, 0x00, 0x32, 0x36, 0x45, 0x06, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0C, 0x00,
+			0xCC, 1, 0x00,      //Panel Control [00]
         };
-        init_table16(R61505V_regValues, sizeof(R61505V_regValues));
-        break;
+        static const uint8_t ILI9481_CPT29_regValues[] PROGMEM = {    // 320x430
+            0xB0, 1, 0x00,
+            0xD0, 3, 0x07, 0x42, 0x1C,  // Set Power [00 43 18]
+            0xD1, 3, 0x00, 0x02, 0x0F,  // Set VCOM  [00 00 00] x0.695, x1.00
+            0xD2, 2, 0x01, 0x11,        // Set Power for Normal Mode [01 22]
+            0xC0, 5, 0x10, 0x35, 0x00, 0x02, 0x11,      //Set Panel Driving [10 3B 00 02 11]
+            0xC5, 1, 0x03,      //Frame Rate [03]
+            0xC8, 12, 0x00, 0x30, 0x36, 0x45, 0x04, 0x16, 0x37, 0x75, 0x77, 0x54, 0x0F, 0x00,
+            0xE4, 1, 0xA0,
+            0xF0, 1, 0x01,
+            0xF3, 2, 0x02, 0x1A,			
+        };
+        static const uint8_t ILI9481_PVI35_regValues[] PROGMEM = {    // 320x480
+            0xB0, 1, 0x00,
+            0xD0, 3, 0x07, 0x41, 0x1D,  // Set Power [00 43 18]
+            0xD1, 3, 0x00, 0x2B, 0x1F,  // Set VCOM  [00 00 00] x0.900, x1.32
+            0xD2, 2, 0x01, 0x11,        // Set Power for Normal Mode [01 22]
+            0xC0, 5, 0x10, 0x3B, 0x00, 0x02, 0x11,      //Set Panel Driving [10 3B 00 02 11]
+            0xC5, 1, 0x03,      //Frame Rate [03]
+            0xC8, 12, 0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00,
+            0xE4, 1, 0xA0,
+            0xF0, 1, 0x01,
+            0xF3, 2, 0x40, 0x0A,			
+        };
+        static const uint8_t ILI9481_AUO317_regValues[] PROGMEM = {    // 320x480
+            0xB0, 1, 0x00,
+            0xD0, 3, 0x07, 0x40, 0x1D,  // Set Power [00 43 18]
+            0xD1, 3, 0x00, 0x18, 0x13,  // Set VCOM  [00 00 00] x0.805, x1.08
+            0xD2, 2, 0x01, 0x11,        // Set Power for Normal Mode [01 22]
+            0xC0, 5, 0x10, 0x3B, 0x00, 0x02, 0x11,      //Set Panel Driving [10 3B 00 02 11]
+            0xC5, 1, 0x03,      //Frame Rate [03]
+            0xC8, 12, 0x00, 0x44, 0x06, 0x44, 0x0A, 0x08, 0x17, 0x33, 0x77, 0x44, 0x08, 0x0C,
+            0xE4, 1, 0xA0,
+            0xF0, 1, 0x01,			
+        };
+        static const uint8_t ILI9481_CMO35_regValues[] PROGMEM = {    // 320480
+            0xB0, 1, 0x00,
+            0xD0, 3, 0x07, 0x41, 0x1D,  // Set Power [00 43 18] 07,41,1D
+            0xD1, 3, 0x00, 0x1C, 0x1F,  // Set VCOM  [00 00 00] x0.825, x1.32 1C,1F
+            0xD2, 2, 0x01, 0x11,        // Set Power for Normal Mode [01 22]
+            0xC0, 5, 0x10, 0x3B, 0x00, 0x02, 0x11,      //Set Panel Driving [10 3B 00 02 11]
+            0xC5, 1, 0x03,      //Frame Rate [03]
+			0xC6, 1, 0x83, 
+            0xC8, 12, 0x00, 0x26, 0x21, 0x00, 0x00, 0x1F, 0x65, 0x23, 0x77, 0x00, 0x0F, 0x00,
+            0xF0, 1, 0x01,		//?
+            0xE4, 1, 0xA0,      //?SETCABC on Himax
+            0x36, 1, 0x48,      //Memory Access [00]
+            0xB4, 1, 0x11,			
+        };
+        static const uint8_t ILI9481_RGB_regValues[] PROGMEM = {    // 320x480
+            0xB0, 1, 0x00,
+            0xD0, 3, 0x07, 0x41, 0x1D,  // SETPOWER [00 43 18]
+            0xD1, 3, 0x00, 0x2B, 0x1F,  // SETVCOM  [00 00 00] x0.900, x1.32
+            0xD2, 2, 0x01, 0x11,        // SETNORPOW for Normal Mode [01 22]
+            0xC0, 6, 0x10, 0x3B, 0x00, 0x02, 0x11, 0x00,     //SETPANEL [10 3B 00 02 11]
+            0xC5, 1, 0x03,      //SETOSC Frame Rate [03]
+            0xC6, 1, 0x80,      //SETRGB interface control
+			0xC8, 12, 0x00, 0x14, 0x33, 0x10, 0x00, 0x16, 0x44, 0x36, 0x77, 0x00, 0x0F, 0x00,
+            0xF3, 2, 0x40, 0x0A,			
+            0xF0, 1, 0x08,
+            0xF6, 1, 0x84,
+            0xF7, 1, 0x80,
+            0x0C, 2, 0x00, 0x55, //RDCOLMOD
+			0xB4, 1, 0x00,      //SETDISPLAY
+//			0xB3, 4, 0x00, 0x01, 0x06, 0x01,  //SETGRAM simple example
+			0xB3, 4, 0x00, 0x01, 0x06, 0x30,  //jpegs example
+        };
+        table8_ads = ILI9481_regValues, table_size = sizeof(ILI9481_regValues);
+//        table8_ads = ILI9481_CPT29_regValues, table_size = sizeof(ILI9481_CPT29_regValues);
+//        table8_ads = ILI9481_PVI35_regValues, table_size = sizeof(ILI9481_PVI35_regValues);
+//        table8_ads = ILI9481_AUO317_regValues, table_size = sizeof(ILI9481_AUO317_regValues);
+//        table8_ads = ILI9481_CMO35_regValues, table_size = sizeof(ILI9481_CMO35_regValues);
+//        table8_ads = ILI9481_RGB_regValues, table_size = sizeof(ILI9481_RGB_regValues);
 
 
+  }
+
+  // Set screen resolution
+  if (_lcd_width != 0 || _lcd_height !=0) {
+        p16 = (int16_t *) & HEIGHT;
+        *p16 = _lcd_height;
+        p16 = (int16_t *) & WIDTH;
+        *p16 = _lcd_width;
   }
 
   if (table8_ads != NULL) {
@@ -819,23 +929,24 @@ int16_t STM32_TFT_8bit::readGRAM(int16_t x, int16_t y, uint16_t * block, int16_t
 
 
 void STM32_TFT_8bit::setRotation(uint8_t r) {
-  uint8_t val;
-  rotation = r & 3;           // just perform the operation ourselves on the protected variables
-  _width = (rotation & 1) ? HEIGHT : WIDTH;
-  _height = (rotation & 1) ? WIDTH : HEIGHT;
+    uint16_t GS, SS, ORG, REV = _lcd_rev;
+    uint8_t val, d[3];
+    rotation = r & 3;           // just perform the operation ourselves on the protected variables
+    _width = (rotation & 1) ? HEIGHT : WIDTH;
+    _height = (rotation & 1) ? WIDTH : HEIGHT;
 
-  #ifdef _DEBUG_
-  Serial.println("setRotation:r=" + String(r));
-  Serial.println("setRotation:rotation=" + String(rotation));
-  Serial.println("setRotation:WIDTH=" + String(WIDTH));
-  Serial.println("setRotation:HEIGHT=" + String(HEIGHT));
-  Serial.println("setRotation:_width=" + String(_width));
-  Serial.println("setRotation:_height=" + String(_height));
-  Serial.println("setRotation:width()=" + String(width()));
-  Serial.println("setRotation:height()=" + String(height()));
-  #endif
+    #ifdef _DEBUG_
+    Serial.println("setRotation:r=" + String(r));
+    Serial.println("setRotation:rotation=" + String(rotation));
+    Serial.println("setRotation:WIDTH=" + String(WIDTH));
+    Serial.println("setRotation:HEIGHT=" + String(HEIGHT));
+    Serial.println("setRotation:_width=" + String(_width));
+    Serial.println("setRotation:_height=" + String(_height));
+    Serial.println("setRotation:width()=" + String(width()));
+    Serial.println("setRotation:height()=" + String(height()));
+    #endif
   
-  switch (rotation) {
+    switch (rotation) {
     case 0:                    //PORTRAIT:
       val = 0x48;              //MY=0, MX=1, MV=0, ML=0, BGR=1
       break;
@@ -848,20 +959,51 @@ void STM32_TFT_8bit::setRotation(uint8_t r) {
     case 3:                    //LANDSCAPE_REV: 270 degrees
       val = 0xF8;              //MY=1, MX=1, MV=1, ML=1, BGR=1
       break;
-  }
+    }
 
-  if (_lcd_capable & INVERT_GS)
-    val ^= 0x80;
-  if (_lcd_capable & INVERT_SS)
-    val ^= 0x40;
-  if (_lcd_capable & INVERT_RGB)
-    val ^= 0x08;
+    if (_lcd_capable & INVERT_GS)
+      val ^= 0x80;
+    if (_lcd_capable & INVERT_SS)
+      val ^= 0x40;
+    if (_lcd_capable & INVERT_RGB)
+      val ^= 0x08;
 
-  if (_lcd_capable & MIPI_DCS_REV1) {
-    _MC = 0x2A, _MP = 0x2B, _MW = 0x2C, _SC = 0x2A, _EC = 0x2A, _SP = 0x2B, _EP = 0x2B;
-    WriteCmdParamN(0x36, 1, &val);
-//        WriteCmdParamN(is8347 ? 0x16 : 0x36, 1, &val);
-    _lcd_madctl = val;
+    if (_lcd_capable & MIPI_DCS_REV1) {
+        if (_lcd_ID == 0x6814) {  //.kbv my weird 0x9486 might be 68140
+            GS = (val & 0x80) ? (1 << 6) : 0;   //MY
+            SS = (val & 0x40) ? (1 << 5) : 0;   //MX
+            val &= 0x28;        //keep MV, BGR, MY=0, MX=0, ML=0
+            d[0] = 0;
+            d[1] = GS | SS | 0x02;      //MY, MX
+            d[2] = 0x3B;
+            WriteCmdParamN(0xB6, 3, d);
+            goto common_MC;
+        } else if (_lcd_ID == 0x1963 || _lcd_ID == 0x9481 || _lcd_ID == 0x1511) {
+            if (val & 0x80)
+                val |= 0x01;    //GS
+            if ((val & 0x40))
+                val |= 0x02;    //SS
+            if (_lcd_ID == 0x1963) val &= ~0xC0;
+            if (_lcd_ID == 0x9481) val &= ~0xD0;
+            if (_lcd_ID == 0x1511) {
+                val &= ~0x10;   //remove ML
+                val |= 0xC0;    //force penguin 180 rotation
+            }
+//            val &= (_lcd_ID == 0x1963) ? ~0xC0 : ~0xD0; //MY=0, MX=0 with ML=0 for ILI9481
+            goto common_MC;
+        } else if (is8347) {
+            _MC = 0x02, _MP = 0x06, _MW = 0x22, _SC = 0x02, _EC = 0x04, _SP = 0x06, _EP = 0x08;
+			if (_lcd_ID == 0x5252) {
+			    val |= 0x02;   //VERT_SCROLLON
+				if (val & 0x10) val |= 0x04;   //if (ML) SS=1 kludge mirror in XXX_REV modes
+            }
+			goto common_BGR;
+        }
+      common_MC:
+        _MC = 0x2A, _MP = 0x2B, _MW = 0x2C, _SC = 0x2A, _EC = 0x2A, _SP = 0x2B, _EP = 0x2B;
+      common_BGR:
+        WriteCmdParamN(is8347 ? 0x16 : 0x36, 1, &val);
+       _lcd_madctl = val;
 //       if (_lcd_ID	== 0x1963) WriteCmdParamN(0x13, 0, NULL);   //NORMAL mode
   }
 
