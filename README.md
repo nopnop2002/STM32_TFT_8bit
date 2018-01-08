@@ -47,14 +47,14 @@ If your TFT's resolution is NOT 240x320,
 you can set your TFT's resolution using tft.setResoution.   
 
 Exsample:   
-`  ID = tft.readID();`   
-`  tft.setResolution(320, 480);`   
-`  Serial.print("Device ID: 0x"); Serial.println(ID, HEX);`
-`  tft.begin(ID);`
-`  uint32_t width = tft.width();`
-`  Serial.print("Width: "); Serial.println(width);`
-`  uint32_t height = tft.height();`
-`  Serial.print("Height: "); Serial.println(height);`
+`ID = tft.readID();`   
+`tft.setResolution(320, 480); // Set your resolution`   
+`Serial.print("Device ID: 0x"); Serial.println(ID, HEX);`   
+`tft.begin(ID);`   
+`uint32_t width = tft.width();`   
+`Serial.print("Width: "); Serial.println(width);`   
+`uint32_t height = tft.height();`   
+`Serial.print("Height: "); Serial.println(height);`   
 
 ---
 
