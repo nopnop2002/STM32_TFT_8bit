@@ -15,6 +15,9 @@ https://github.com/adafruit/Adafruit-GFX-Library
 
 # Wirering for 8bit Parallel TFT   
 
+Using GPIOA as Data Port   
+`#define TFT_DATA       GPIOA`   
+
 |TFT||STM32F103|
 |:-:|:-:|:-:|
 |LCD_RST|--|PB7|
@@ -30,6 +33,29 @@ https://github.com/adafruit/Adafruit-GFX-Library
 |LCD_D5|--|PA5|
 |LCD_D6|--|PA6|
 |LCD_D7|--|PA7|
+|5V|--|5V(*)|
+|3.3V|--|3.3V(*)|
+|GND|--|GND|
+
+
+Using GPIOC as Data Port   
+`#define TFT_DATA       GPIOC`   
+
+|TFT||STM32F103|
+|:-:|:-:|:-:|
+|LCD_RST|--|PB7|
+|LCD_CS|--|PB6|
+|LCD_RS|--|PB5|
+|LCD_WR|--|PB4|
+|LCD_RD|--|PB3|
+|LCD_D0|--|PC0|
+|LCD_D1|--|PC1|
+|LCD_D2|--|PC2|
+|LCD_D3|--|PC3|
+|LCD_D4|--|PC4|
+|LCD_D5|--|PC5|
+|LCD_D6|--|PC6|
+|LCD_D7|--|PC7|
 |5V|--|5V(*)|
 |3.3V|--|3.3V(*)|
 |GND|--|GND|
