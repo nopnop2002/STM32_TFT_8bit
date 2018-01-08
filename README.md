@@ -41,7 +41,7 @@ Pin define is "STM32_TFT_8bit.h"
 
 ----
 
-# Setting your resolution    
+# Setting your TFT's resolution    
 
 If your TFT's resolution is NOT 240x320,   
 you can set your TFT's resolution using tft.setResoution.   
