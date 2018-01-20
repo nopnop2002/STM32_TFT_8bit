@@ -232,8 +232,8 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
   //set up 8 bit parallel port to write mode.
   setWriteDataBus();
 
-  Serial.println("_lcd_width=" + String(_lcd_width) + " _lcd_height=" + String(_lcd_height));
-  Serial.println("_lcd_offset=" + String(_lcd_offset));
+//  Serial.println("_lcd_width=" + String(_lcd_width) + " _lcd_height=" + String(_lcd_height));
+//  Serial.println("_lcd_offset=" + String(_lcd_offset));
 #if 0
   // toggle RST low to reset
   TFT_CNTRL->regs->CRH = (TFT_CNTRL->regs->CRH & 0xFFFFFFF0) | 0x00000003; 
@@ -250,7 +250,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
   switch (_lcd_ID) {
 
     case 0x1505:                //R61505 thanks Ravi_kanchan2004. R61505V, R61505W different
-    case 0x9320:
+    case 0x9320:                //ILI9320
         _lcd_capable = 0 | REV_SCREEN | READ_BGR;
       common_9320:
         static const uint16_t ILI9320_regValues[] PROGMEM = {
@@ -318,16 +318,16 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
         init_table16(ILI9320_regValues, sizeof(ILI9320_regValues));
         break;
 
-    case 0x5408:
+    case 0x5408:                //SPFD5408
 //        _lcd_capable = 0 | REV_SCREEN | READ_BGR | INVERT_GS;
 //        goto common_9320;
         _lcd_capable = 0 | REV_SCREEN | READ_BGR;
         goto common_93x5;
-    case 0x9325:
+    case 0x9325:                //ILI9325
         _lcd_capable = 0 | REV_SCREEN | INVERT_GS;
         goto common_93x5;
-    case 0x9331:
-    case 0x9335:
+    case 0x9331:                //ILI9331
+    case 0x9335:                //ILI9335
         _lcd_capable = 0 | REV_SCREEN;
       common_93x5:
         static const uint16_t ILI9325_regValues[] PROGMEM = {
@@ -451,8 +451,8 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 
 
 
-    case 0x7793:
-    case 0xB509:
+    case 0x7793:                //ST7793
+    case 0xB509:                //R61509V
         _lcd_capable = REV_SCREEN;
         static const uint16_t R61509V_regValues[] PROGMEM = {
             0x0000, 0x0000,
@@ -515,7 +515,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
         break;
 
 
-   case 0x9341:
+   case 0x9341:                //ILI9341
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS;
       static const uint8_t ILI9341_regValues_2_4[] PROGMEM = {        // BOE 2.4"
         0xF6, 3, 0x01, 0x01, 0x00,  //Interface Control needs EXTC=1 MV_EOR=0, TM=0, RIM=0
@@ -543,7 +543,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 
     break;
     
-   case 0x9342:
+   case 0x9342:                //ILI9342
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS | INVERT_GS | REV_SCREEN;
       static const uint8_t ILI9342_regValues_CPT24[] PROGMEM = {     //CPT 2.4"
         (0xB9), 3, 0xFF, 0x93, 0x42, //[00 00 00]
@@ -588,7 +588,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
     case 0x1581:                        //no BGR in MADCTL.  set BGR in Panel Control
         _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS; //thanks zdravke
 		goto common_9481;
-    case 0x9481:
+    case 0x9481:                //ILI9481
         _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_BGR;
 	  common_9481:
         static const uint8_t ILI9481_regValues[] PROGMEM = {    // Atmel MaxTouch
@@ -681,6 +681,15 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 //        table8_ads = ILI9481_CMO35_regValues, table_size = sizeof(ILI9481_CMO35_regValues);
 //        table8_ads = ILI9481_RGB_regValues, table_size = sizeof(ILI9481_RGB_regValues);
 
+    break;
+
+    case 0x6814:
+        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS;
+		static const uint8_t RM68140_regValues_max[] PROGMEM = {        //
+            0x3A, 1, 0x55,      //Pixel format .kbv my Mega Shield
+        };
+        table8_ads = RM68140_regValues_max, table_size = sizeof(RM68140_regValues_max);
+        break;
 
   }
 
