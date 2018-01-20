@@ -15,8 +15,6 @@
 
 STM32_TFT_8bit tft;
 
-#define GREY 0x5AEB
-
 float sx = 0, sy = 1, mx = 1, my = 0, hx = -1, hy = 0;    // Saved H, M, S x & y multipliers
 float sdeg=0, mdeg=0, hdeg=0;
 uint16_t osx=120, osy=120, omx=120, omy=120, ohx=120, ohy=120;  // Saved H, M, S x & y coords
@@ -43,8 +41,8 @@ void setup(void) {
   } else {
     tft.setRotation(1);
   }
-  tft.fillScreen(GREY);
-  tft.setTextColor(WHITE, GREY);  // Adding a background colour erases previous text automatically
+  tft.fillScreen(GRAY);
+  tft.setTextColor(WHITE, GRAY);  // Adding a background colour erases previous text automatically
   
   // Draw clock face
   tft.fillCircle(120, 120, 118, GREEN);

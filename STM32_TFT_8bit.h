@@ -41,8 +41,8 @@ If you use TFT of different resolution, change this.
 #define MAROON      0x7800      /* 128,   0,   0 */
 #define PURPLE      0x780F      /* 128,   0, 128 */
 #define OLIVE       0x7BE0      /* 128, 128,   0 */
-#define LIGHTGREY   0xC618      /* 192, 192, 192 */
-#define DARKGREY    0x7BEF      /* 128, 128, 128 */
+#define LIGHTGRAY   0xC618      /* 192, 192, 192 */
+#define DARKGRAY    0x7BEF      /* 128, 128, 128 */
 #define BLUE        0x001F      /*   0,   0, 255 */
 #define GREEN       0x07E0      /*   0, 255,   0 */
 #define CYAN        0x07FF      /*   0, 255, 255 */
