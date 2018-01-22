@@ -316,7 +316,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
             TFTLCD_DELAY, 50,
         };
         init_table16(ILI9320_regValues, sizeof(ILI9320_regValues));
-        break;
+    break;
 
     case 0x5408:                //SPFD5408
 //        _lcd_capable = 0 | REV_SCREEN | READ_BGR | INVERT_GS;
@@ -391,7 +391,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
             0x0007, 0x0133,     // 262K color and display ON
         };
         init_table16(ILI9325_regValues, sizeof(ILI9325_regValues));
-        break;
+    break;
 
     case 0xB505:                //R61505V
     case 0xC505:                //R61505W
@@ -447,7 +447,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
             0x0007, 0x0100,     //BASEE=1--Display On
         };
         init_table16(R61505V_regValues, sizeof(R61505V_regValues));
-        break;
+    break;
 
 
 
@@ -512,7 +512,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
             0x0201, 0x0000,
         };
         init_table16(R61509V_regValues, sizeof(R61509V_regValues));
-        break;
+   break;
 
 
    case 0x9341:                //ILI9341
@@ -541,7 +541,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
       };
       table8_ads = ILI9341_regValues_2_4, table_size = sizeof(ILI9341_regValues_2_4);   //
 
-    break;
+   break;
     
    case 0x9342:                //ILI9342
       _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS | INVERT_GS | REV_SCREEN;
@@ -689,7 +689,56 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
             0x3A, 1, 0x55,      //Pixel format .kbv my Mega Shield
         };
         table8_ads = RM68140_regValues_max, table_size = sizeof(RM68140_regValues_max);
-        break;
+    break;
+
+    case 0x7783:
+        _lcd_capable = AUTO_READINC | REV_SCREEN | INVERT_GS;
+        static const uint16_t ST7781_regValues[] PROGMEM = {
+            0x00FF, 0x0001,     //can we do 0xFF
+            0x00F3, 0x0008,
+            //  LCD_Write_COM(0x00F3,
+
+            0x00, 0x0001,
+            0x0001, 0x0100,     // Driver Output Control Register (R01h)
+            0x0002, 0x0700,     // LCD Driving Waveform Control (R02h)
+            0x0003, 0x1030,     // Entry Mode (R03h)
+            0x0008, 0x0302,
+            0x0009, 0x0000,
+            0x0010, 0x0000,     // Power Control 1 (R10h)
+            0x0011, 0x0007,     // Power Control 2 (R11h)
+            0x0012, 0x0000,     // Power Control 3 (R12h)
+            0x0013, 0x0000,     // Power Control 4 (R13h)
+            TFTLCD_DELAY, 50,
+            0x0010, 0x14B0,     // Power Control 1 SAP=1, BT=4, APE=1, AP=3
+            TFTLCD_DELAY, 10,
+            0x0011, 0x0007,     // Power Control 2 VC=7
+            TFTLCD_DELAY, 10,
+            0x0012, 0x008E,     // Power Control 3 VCIRE=1, VRH=14
+            0x0013, 0x0C00,     // Power Control 4 VDV=12
+            0x0029, 0x0015,     // NVM read data 2 VCM=21
+            TFTLCD_DELAY, 10,
+            0x0030, 0x0000,     // Gamma Control 1
+            0x0031, 0x0107,     // Gamma Control 2
+            0x0032, 0x0000,     // Gamma Control 3
+            0x0035, 0x0203,     // Gamma Control 6
+            0x0036, 0x0402,     // Gamma Control 7
+            0x0037, 0x0000,     // Gamma Control 8
+            0x0038, 0x0207,     // Gamma Control 9
+            0x0039, 0x0000,     // Gamma Control 10
+            0x003C, 0x0203,     // Gamma Control 13
+            0x003D, 0x0403,     // Gamma Control 14
+            0x0060, 0xA700,     // Driver Output Control (R60h) .kbv was 0xa700
+            0x0061, 0x0001,     // Driver Output Control (R61h)
+            0x0090, 0X0029,     // Panel Interface Control 1 (R90h)
+
+            // Display On
+            0x0007, 0x0133,     // Display Control (R07h)
+            TFTLCD_DELAY, 50,
+        };
+        init_table16(ST7781_regValues, sizeof(ST7781_regValues));
+    break;
+
+
 
   }
 
@@ -1367,7 +1416,7 @@ uint16_t STM32_TFT_8bit::readID(void)
     uint16_t ret, ret2;
     uint8_t msb;
     ret = readReg16(0);           //forces a reset() if called before begin()
-    Serial.println("readReg16(0)=" + String(ret,HEX));
+    Serial.println("readReg16(0)=0x" + String(ret,HEX));
     if (ret == 0x5408)          //the SPFD5408 fails the 0xD3D3 test.
         return 0x5408;
     if (ret == 0x5420)          //the SPFD5420 fails the 0xD3D3 test.
@@ -1379,7 +1428,7 @@ uint16_t STM32_TFT_8bit::readID(void)
         return 0x8347;
 
     ret = readReg32(0xA1);      //SSD1963: [01 57 61 01]
-    Serial.println("readReg32(A1)=" + String(ret,HEX));
+    Serial.println("readReg32(A1)=0x" + String(ret,HEX));
     if (ret == 0x6101)
         return 0x1963;
     if (ret == 0xFFFF)          //R61526: [xx FF FF FF]
@@ -1388,7 +1437,7 @@ uint16_t STM32_TFT_8bit::readID(void)
 //        return 0x1520;          //subsequent begin() enables Command Access
 
 	ret = readReg40(0xBF);
-    Serial.println("readReg40(BF)=" + String(ret,HEX));
+    Serial.println("readReg40(BF)=0x" + String(ret,HEX));
 	if (ret == 0x8357)          //HX8357B: [xx 01 62 83 57 FF]
         return 0x8357;
 	if (ret == 0x9481)          //ILI9481: [xx 02 04 94 81 FF]
@@ -1401,22 +1450,22 @@ uint16_t STM32_TFT_8bit::readID(void)
         return 0x1526;
     if (ret == 0x1581)          //R61581:  [xx 01 22 15 81]
         return 0x1581;
-    if (ret == 0x1400)          //?RM68140:[xx FF 68 14 00] not tested yet
-        return 0x6814;
+//    if (ret == 0x1400)          //?RM68140:[xx FF 68 14 00] not tested yet
+//        return 0x6814;
     ret = readReg32(0xD4);
-    Serial.println("readReg32(D4)=" + String(ret,HEX));
+    Serial.println("readReg32(D4)=0x" + String(ret,HEX));
     if (ret == 0x5310)          //NT35310: [xx 01 53 10]
         return 0x5310;
     ret = readReg40(0xEF);      //ILI9327: [xx 02 04 93 27 FF] 
-    Serial.println("readReg40(EF)=" + String(ret,HEX));
+    Serial.println("readReg40(EF)=0x" + String(ret,HEX));
     if (ret == 0x9327)
         return 0x9327;
     ret = readReg32(0xFE) >> 8; //weird unknown from BangGood [04 20 53] 
-    Serial.println("readReg32(FE)=" + String(ret,HEX));
+    Serial.println("readReg32(FE)=0x" + String(ret,HEX));
     if (ret == 0x2053)
         return 0x2053;
     uint32_t ret32 = readReg32(0x04);
-    Serial.println("readReg32(04)=" + String(ret32,HEX));
+    Serial.println("readReg32(04)=0x" + String(ret32,HEX));
     msb = ret32 >> 16;
     ret = ret32;	
 //    if (msb = 0x38 && ret == 0x8000) //unknown [xx 38 80 00] with D3 = 0x1602
@@ -1438,8 +1487,10 @@ uint16_t STM32_TFT_8bit::readID(void)
         return 0x7789;
     if (ret == 0xAC11)          //?unknown [xx 61 AC 11]
         return 0xAC11;
+    if (msb == 0x54 && ret == 0x8066)  //RM68140:[xx 54 80 66]
+        return 0x6814;
     ret = readReg32(0xD3);      //for ILI9488, 9486, 9340, 9341
-    Serial.println("readReg32(D3)=" + String(ret,HEX));
+    Serial.println("readReg32(D3)=0x" + String(ret,HEX));
     msb = ret >> 8;
     if (msb == 0x93 || msb == 0x94 || msb == 0x98 || msb == 0x77 || msb == 0x16)
         return ret;             //0x9488, 9486, 9340, 9341, 7796
@@ -1456,7 +1507,7 @@ uint16_t STM32_TFT_8bit::readID(void)
     	return ret2;
 */
     ret = readReg16(0);          //0154, 7783, 9320, 9325, 9335, B505, B509
-    Serial.println("readReg16(0)=" + String(ret,HEX));
+    Serial.println("readReg16(0)=0x" + String(ret,HEX));
     return ret;
 }
 
