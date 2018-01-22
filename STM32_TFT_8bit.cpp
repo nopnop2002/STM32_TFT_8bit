@@ -1450,8 +1450,8 @@ uint16_t STM32_TFT_8bit::readID(void)
         return 0x1526;
     if (ret == 0x1581)          //R61581:  [xx 01 22 15 81]
         return 0x1581;
-//    if (ret == 0x1400)          //?RM68140:[xx FF 68 14 00] not tested yet
-//        return 0x6814;
+    if (ret == 0x1400)          //?RM68140:[xx FF 68 14 00] not tested yet
+        return 0x6814;
     ret = readReg32(0xD4);
     Serial.println("readReg32(D4)=0x" + String(ret,HEX));
     if (ret == 0x5310)          //NT35310: [xx 01 53 10]
@@ -1487,8 +1487,8 @@ uint16_t STM32_TFT_8bit::readID(void)
         return 0x7789;
     if (ret == 0xAC11)          //?unknown [xx 61 AC 11]
         return 0xAC11;
-    if (msb == 0x54 && ret == 0x8066)  //RM68140:[xx 54 80 66]
-        return 0x6814;
+//    if (msb == 0x54 && ret == 0x8066)  //RM68140:[xx 54 80 66] But Many different controllers will return same value.
+//        return 0x6814;
     ret = readReg32(0xD3);      //for ILI9488, 9486, 9340, 9341
     Serial.println("readReg32(D3)=0x" + String(ret,HEX));
     msb = ret >> 8;

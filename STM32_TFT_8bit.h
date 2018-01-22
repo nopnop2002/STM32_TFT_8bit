@@ -59,11 +59,11 @@ If you use TFT of different resolution, change this.
 Define pins and Output Data Registers
 */
 
-//#define TFT_DATA       GPIOA
+#define TFT_DATA       GPIOA
 //Port data |D7 |D6 |D5 |D4 |D3 |D2 |D1 |D0 |
 //Pin stm32 |PA7|PA6|PA5|PA4|PA3|PA2|PA1|PA0|
 
-#define TFT_DATA       GPIOC
+//#define TFT_DATA       GPIOC
 //Port data |D7 |D6 |D5 |D4 |D3 |D2 |D1 |D0 |
 //Pin stm32 |PC7|PC6|PC5|PC4|PC3|PC2|PC1|PC0|
 
