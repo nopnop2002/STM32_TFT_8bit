@@ -7,6 +7,7 @@
 #define M_SIZE 1.3333
 
 #include <Adafruit_GFX.h>
+#include <Fonts/FreeMonoBold24pt7b.h>
 #include "STM32_TFT_8bit.h"
 
 STM32_TFT_8bit tft;
@@ -151,10 +152,10 @@ void analogMeter()
 
   _drawString("%RH", M_SIZE*(5 + 230 - 40), M_SIZE*(119 - 20), 2); // Units at bottom right
   //tft.drawString("%RH", M_SIZE*(5 + 230 - 40), M_SIZE*(119 - 20), 2); // Units at bottom right
-  _drawString("%RH", M_SIZE*100, M_SIZE*70, 4); // Comment out to avoid font 4
-  //tft.drawCentreString("%RH", M_SIZE*120, M_SIZE*70, 4); // Comment out to avoid font 4
-  tft.drawRect(5, 3, M_SIZE*230, M_SIZE*119, TFT_BLACK); // Draw bezel line
 
+  //tft.drawCentreString("%RH", M_SIZE*120, M_SIZE*70, 4); // Comment out to avoid font 4
+
+  tft.drawRect(5, 3, M_SIZE*230, M_SIZE*119, TFT_BLACK); // Draw bezel line
   plotNeedle(0, 0); // Put meter needle at 0
 }
 
@@ -199,7 +200,9 @@ void plotNeedle(int value, byte ms_delay)
 
     // Re-plot text under needle
     tft.setTextColor(TFT_BLACK);
-    _drawString("%RH", M_SIZE*100, M_SIZE*70, 4); // // Comment out to avoid font 4
+    tft.setFont(&FreeMonoBold24pt7b);
+    _drawString("%RH", M_SIZE*80, M_SIZE*100, 1); // // Comment out to avoid font 4
+    tft.setFont();
     //tft.drawCentreString("%RH", M_SIZE*120, M_SIZE*70, 4); // // Comment out to avoid font 4
 
     // Store new needle end coords for next erase

@@ -5,6 +5,7 @@
 
 
 #include <Adafruit_GFX.h>
+#include <Fonts/FreeMonoBold18pt7b.h>
 #include "STM32_TFT_8bit.h"
 
 STM32_TFT_8bit tft;
@@ -177,7 +178,6 @@ void analogMeter()
 
   _drawString("%RH", 5 + 230 - 40, 119 - 20, 2); // Units at bottom right
   //tft.drawString("%RH", 5 + 230 - 40, 119 - 20, 2); // Units at bottom right
-  _drawString("%RH", 90, 70, 3); // Comment out to avoid font 4
   //tft.drawCentreString("%RH", 120, 70, 4); // Comment out to avoid font 4
   tft.drawRect(5, 3, 230, 119, TFT_BLACK); // Draw bezel line
 
@@ -223,7 +223,9 @@ void plotNeedle(int value, byte ms_delay)
 
     // Re-plot text under needle
     tft.setTextColor(TFT_BLACK);
-    _drawString("%RH", 90, 70, 3); // // Comment out to avoid font 4
+    tft.setFont(&FreeMonoBold18pt7b);
+    _drawString("%RH", 80, 100, 1); // // Comment out to avoid font 4
+    tft.setFont();
     //tft.drawCentreString("%RH", 120, 70, 4); // // Comment out to avoid font 4
 
     // Store new needle end coords for next erase
