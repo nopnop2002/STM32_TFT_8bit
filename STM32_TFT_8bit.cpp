@@ -561,7 +561,53 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 		TFTLCD_DELAY,50,
 		//0x00A0,0x0000, //Test Register 1 (RA0h)
 		};
-	init_table16(LGDP4532_regValues, sizeof(LGDP4532_regValues));
+	  init_table16(LGDP4532_regValues, sizeof(LGDP4532_regValues));
+   break;
+
+   case 0x4535:
+      _lcd_capable = 0 | REV_SCREEN;  // | INVERT_GS;
+      static const uint16_t LGDP4535_regValues[] PROGMEM = {
+            0x0015, 0x0030,     // Set the internal vcore voltage                                               
+            0x009A, 0x0010,     // Start internal OSC 
+            0x0011, 0x0020,     // set SS and SM bit 
+            0x0010, 0x3428,     // set 1 line inversion 
+            0x0012, 0x0002,     // set GRAM write direction and BGR=1  
+            0x0013, 0x1038,     // Resize register 
+            TFTLCD_DELAY, 40,
+            0x0012, 0x0012,     // set the back porch and front porch 
+            TFTLCD_DELAY, 40,
+            0x0010, 0x3420,     // set non-display area refresh cycle ISC[3:0] 
+            0x0013, 0x3045,     // FMARK function 
+            TFTLCD_DELAY, 70,
+            0x0030, 0x0000,     // RGB interface setting 
+            0x0031, 0x0402,     // Frame marker Position 
+            0x0032, 0x0307,     // RGB interface polarity 
+            0x0033, 0x0304,     // SAP, BT[3:0], AP, DSTB, SLP, STB 
+            0x0034, 0x0004,     // DC1[2:0], DC0[2:0], VC[2:0] 
+            0x0035, 0x0401,     // VREG1OUT voltage 
+            0x0036, 0x0707,     // VDV[4:0] for VCOM amplitude 
+            0x0037, 0x0305,     // SAP, BT[3:0], AP, DSTB, SLP, STB 
+            0x0038, 0x0610,     // DC1[2:0], DC0[2:0], VC[2:0] 
+            0x0039, 0x0610,     // VREG1OUT voltage 
+            0x0001, 0x0100,     // VDV[4:0] for VCOM amplitude 
+            0x0002, 0x0300,     // VCM[4:0] for VCOMH 
+            0x0003, 0x1030,     // GRAM horizontal Address 
+            0x0008, 0x0808,     // GRAM Vertical Address 
+            0x000A, 0x0008,
+            0x0060, 0x2700,     // Gate Scan Line 
+            0x0061, 0x0001,     // NDL,VLE, REV 
+            0x0090, 0x013E,
+            0x0092, 0x0100,
+            0x0093, 0x0100,
+            0x00A0, 0x3000,
+            0x00A3, 0x0010,
+            0x0007, 0x0001,
+            0x0007, 0x0021,
+            0x0007, 0x0023,
+            0x0007, 0x0033,
+            0x0007, 0x0133,
+      };
+      init_table16(LGDP4535_regValues, sizeof(LGDP4535_regValues));
    break;
 
    case 0x9341:                //ILI9341
