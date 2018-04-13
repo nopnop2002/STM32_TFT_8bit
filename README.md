@@ -1,5 +1,5 @@
 # STM32_TFT_8bit
-STM32 8bit TFT Library
+8bit TFT Library for Arduino_STM32
 
 I ported from here.   
 https://github.com/prenticedavid/MCUFRIEND_kbv   
