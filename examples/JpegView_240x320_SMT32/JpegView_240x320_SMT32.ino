@@ -71,7 +71,7 @@ void loop(void) {
   // Draw a jpeg image
   tft.fillScreen(random(0x10000));
   if ( (fno % 6) == 0) drawFSJpeg("healsky3.jpg", 0, 0);
-  if ( (fno % 6) == 1) drawFSJpeg("selfie.jpg", 0, 0);
+  if ( (fno % 6) == 1) drawFSJpeg("F103RBT6.jpg", 0, 0);
   if ( (fno % 6) == 2) drawFSJpeg("sunrise.jpg", 0, 0);
   if ( (fno % 6) == 3) drawFSJpeg("SMT32_PillBoard.jpg", 0, 0);
   if ( (fno % 6) == 4) drawFSJpeg("tree.jpg", 0, 0);
