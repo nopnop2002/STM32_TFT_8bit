@@ -162,7 +162,7 @@ https://github.com/nopnop2002/STM32_JPEGDecorder
 |:-:|:-:|:-:|
 |SD_SS|--|PB12|
 |SD_SCK|--|PB13|
-|SD_DI|--|PC15|
+|SD_DI|--|PB15|
 |SD_DO|--|PB14|
 |5V|--|5V(*)|
 |3.3V|--|3.3V(*)|
