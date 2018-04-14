@@ -158,7 +158,7 @@ https://github.com/nopnop2002/STM32_JPEGDecorder
 
 # Wirering for TFT built-in SD-CARD Reader   
 
-|SD-CARD||STM32F103|
+|TFT||STM32F103|
 |:-:|:-:|:-:|
 |SD_SS|--|PB12|
 |SD_SCK|--|PB13|
