@@ -156,8 +156,6 @@ https://github.com/greiman/SdFat
 AJPEG decoder library for STM32   
 https://github.com/nopnop2002/STM32_JPEGDecorder   
 
-----
-
 # Wirering for TFT built-in SD-CARD Reader   
 
 |SD-CARD||STM32F103|
@@ -173,12 +171,10 @@ https://github.com/nopnop2002/STM32_JPEGDecorder
 \*When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
 \*When a regulator is NOT mounted on the back, it's operated 3.3V.   
 
-----
-
 # How to use    
 
 Copy JPEGS file to your SD-CARD.   
-Wire SD-CARD reader to STM32.   
+Wire TFT built-in SD-CARD Reader to STM32.   
 Execute JpegView_240x320_SMT32.   
 
 ![jpegview](https://user-images.githubusercontent.com/6020549/38765746-2997e69a-4002-11e8-9117-43395f7325a1.JPG)
