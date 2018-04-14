@@ -73,7 +73,7 @@ void loop(void) {
   if ( (fno % 6) == 0) drawFSJpeg("healsky3.jpg", 0, 0);
   if ( (fno % 6) == 1) drawFSJpeg("selfie.jpg", 0, 0);
   if ( (fno % 6) == 2) drawFSJpeg("sunrise.jpg", 0, 0);
-  if ( (fno % 6) == 3) drawFSJpeg("tile1920.jpg", 0, 0);
+  if ( (fno % 6) == 3) drawFSJpeg("SMT32_PillBoard.jpg", 0, 0);
   if ( (fno % 6) == 4) drawFSJpeg("tree.jpg", 0, 0);
   if ( (fno % 6) == 5) drawFSJpeg("JpegView.jpg", 0, 0);
   fno++;
