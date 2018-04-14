@@ -220,7 +220,7 @@ void printTimestamps(SdFile& f) {
 #define nMax 100
 
 // Show JPEG file list on console
-void showJpegFileList () {
+int showJpegFileList (uint16_t * JPEGIndex, int MaxIndex) {
   //SD.ls(LS_DATE | LS_SIZE | LS_R);
   // Position of file's directory entry.
   uint16_t dirIndex[nMax];
@@ -254,10 +254,11 @@ void showJpegFileList () {
   //Serial.println("n=" + String(n));
 
   // List files in root directory.
+  int ipos = 0;
   Serial.println("--------------------------------------------");
   for(int i=0;i<n;i++) {
     if (!file.open(&dirFile, dirIndex[i], O_READ)) {
-      SD.errorHalt(F("open"));
+      SD.errorHalt(F("open file failed"));
     }
 
     //Serial.print("open ok ");
@@ -267,17 +268,19 @@ void showJpegFileList () {
     file.getName(fname,20);
     //char * j = strstr(fname,".jpg");
     //Serial.println("j=" + String(j));
-    if (strstr(fname, ".jpg") != 0) {
+    if (strstr(fname, ".jpg") || strstr(fname, ".JPG")) {
       printTimestamps(file);
       sprintf(buf,"%10d %s",fsz,fname);
       //Serial.println("fname[" + String(i) + "]=" + String(fname));
       Serial.println(buf);
+      if (ipos < MaxIndex) JPEGIndex[ipos++] = dirIndex[i];
     }
     file.close();
     Serial.flush();
   }
   dirFile.close();
   Serial.println("--------------------------------------------");
+  return ipos;
 }
 
 //====================================================================================
