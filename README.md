@@ -142,3 +142,45 @@ Serial.print("Height: "); Serial.println(height); // You will see 400
 # ILI9342 2.4 inch TFT
 ![ili9342](https://user-images.githubusercontent.com/6020549/34552887-9aa02fb2-f167-11e7-8ca6-6517de127a4a.JPG)
 
+----
+
+# JPEG Viewer    
+
+Viewer of a JPEG file in the SD card.   
+
+# Software requirement    
+
+Arduino FAT16/FAT32 Library   
+https://github.com/greiman/SdFat   
+
+AJPEG decoder library for STM32   
+https://github.com/nopnop2002/STM32_JPEGDecorder   
+
+----
+
+# Wirering for TFT built-in SD-CARD Reader   
+
+|SD-CARD||STM32F103|
+|:-:|:-:|:-:|
+|SD_SS|--|PB12|
+|SD_SCK|--|PB13|
+|SD_DI|--|PC15|
+|SD_DO|--|PB14|
+|5V|--|5V(*)|
+|3.3V|--|3.3V(*)|
+|GND|--|GND|
+
+\*When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
+\*When a regulator is NOT mounted on the back, it's operated 3.3V.   
+
+----
+
+# How to use    
+
+Copy JPEGS file to your SD-CARD.   
+Wire SD-CARD reader to STM32.   
+Execute JpegView_240x320_SMT32.   
+
+![jpegview](https://user-images.githubusercontent.com/6020549/38765746-2997e69a-4002-11e8-9117-43395f7325a1.JPG)
+
+
