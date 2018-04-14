@@ -174,7 +174,7 @@ https://github.com/nopnop2002/STM32_JPEGDecorder
 # How to use    
 
 Copy JPEGS file to your SD-CARD.   
-\*The biggest length of the JPEG file name is 32 character.
+\*The biggest length of the JPEG file name is 32 character.   
 Wire TFT built-in SD-CARD Reader to STM32.   
 Execute JpegView_240x320_SMT32.   
 
