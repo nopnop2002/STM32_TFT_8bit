@@ -72,6 +72,7 @@ void setup() {
 
 void loop(void) {
   static int ipos = 0;
+  char fname[32];
 
   // Get JPEG file name
   //Serial.println("ipos=" + String(ipos));
@@ -84,18 +85,17 @@ void loop(void) {
     SD.errorHalt(F("open file failed"));
   }
   //Serial.print("open ok ");
-  char fname[20];
-  file.getName(fname,20);
+  file.getName(fname,sizeof(fname));
   //Serial.println("fname=" + String(fname));
   file.close();
   dirFile.close();
-  ipos++;
-  if (ipos == numJPEG) ipos = 0;
-
-  // Draw JPEG image
+ 
+   // Draw JPEG image
   tft.fillScreen(random(0x10000));
   drawFSJpeg(fname, 0, 0);
  
+  ipos++;
+  if (ipos == numJPEG) ipos = 0;
+ 
   delay(5000);
 }
-
