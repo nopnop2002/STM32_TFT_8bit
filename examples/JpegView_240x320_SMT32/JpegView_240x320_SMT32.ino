@@ -75,22 +75,9 @@ void loop(void) {
   char fname[32];
 
   // Get JPEG file name
-  //Serial.println("ipos=" + String(ipos));
-  SdFile file;
-  SdFile dirFile;
-  if (!dirFile.open("/", O_READ)) {
-    SD.errorHalt("open root failed");
-  }
-  if (!file.open(&dirFile, JPEGIndex[ipos], O_READ)) {
-    SD.errorHalt(F("open file failed"));
-  }
-  //Serial.print("open ok ");
-  file.getName(fname,sizeof(fname));
-  //Serial.println("fname=" + String(fname));
-  file.close();
-  dirFile.close();
- 
-   // Draw JPEG image
+  strcpy(fname, getFileName(JPEGIndex[ipos]));
+  
+  // Draw JPEG image
   tft.fillScreen(random(0x10000));
   drawFSJpeg(fname, 0, 0);
  
@@ -99,3 +86,5 @@ void loop(void) {
  
   delay(5000);
 }
+
+

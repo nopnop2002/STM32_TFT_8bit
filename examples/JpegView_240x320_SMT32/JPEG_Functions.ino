@@ -221,9 +221,10 @@ void printTimestamps(SdFile& f) {
 
 // Show JPEG file list on console
 int showJpegFileList (uint16_t * JPEGIndex, int MaxIndex) {
-  //SD.ls(LS_DATE | LS_SIZE | LS_R);
+
   // Position of file's directory entry.
-  uint16_t dirIndex[nMax];
+  uint16_t *dirIndexP;
+  dirIndexP = (uint16_t *) malloc(nMax);
 
   SdFile file;
   SdFile dirFile;
@@ -239,7 +240,8 @@ int showJpegFileList (uint16_t * JPEGIndex, int MaxIndex) {
     if (!file.isSubDir() && !file.isHidden()) {
 
       // Save dirIndex of file in directory.
-      dirIndex[n] = file.dirIndex();
+      dirIndexP[n] = file.dirIndex();
+      
 #if 0
       // Print the file number and name.
       Serial.print(n);
@@ -257,7 +259,7 @@ int showJpegFileList (uint16_t * JPEGIndex, int MaxIndex) {
   int ipos = 0;
   Serial.println("--------------------------------------------");
   for(int i=0;i<n;i++) {
-    if (!file.open(&dirFile, dirIndex[i], O_READ)) {
+    if (!file.open(&dirFile, dirIndexP[i], O_READ)) {
       SD.errorHalt(F("open file failed"));
     }
 
@@ -273,14 +275,38 @@ int showJpegFileList (uint16_t * JPEGIndex, int MaxIndex) {
       sprintf(buf,"%10d %s",fsz,fname);
       //Serial.println("fname[" + String(i) + "]=" + String(fname));
       Serial.println(buf);
-      if (ipos < MaxIndex) JPEGIndex[ipos++] = dirIndex[i];
+      if (ipos < MaxIndex) JPEGIndex[ipos++] = dirIndexP[i];
     }
     file.close();
     Serial.flush();
   }
   dirFile.close();
+  free(dirIndexP);
   Serial.println("--------------------------------------------");
   return ipos;
+}
+
+
+char *getFileName(int index)
+{
+  char fname[32];
+
+  // Get JPEG file name
+  //Serial.println("index=" + String(index));
+  SdFile file;
+  SdFile dirFile;
+  if (!dirFile.open("/", O_READ)) {
+    SD.errorHalt("open root failed");
+  }
+  if (!file.open(&dirFile, index, O_READ)) {
+    SD.errorHalt(F("open file failed"));
+  }
+  //Serial.print("open ok ");
+  file.getName(fname,sizeof(fname));
+  //Serial.println("fname=" + String(fname));
+  file.close();
+  dirFile.close();
+  return fname;
 }
 
 //====================================================================================
