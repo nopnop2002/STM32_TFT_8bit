@@ -56,7 +56,7 @@ void setup() {
   Serial.print("Width: "); Serial.println(width);
   uint32_t height = tft.height();
   Serial.print("Height: "); Serial.println(height);
-  if (width < height) tft.setRotation(1);
+  if (width < height) tft.setRotation(3);
 
   // initialize the second card
   //if (!SD.begin(SD_CS, SD_SCK_MHZ(18))) {
