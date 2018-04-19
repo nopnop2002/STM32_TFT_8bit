@@ -39,6 +39,9 @@ const uint8_t SD_CS = PB12;   // chip select for sd2
 #define initError(msg) initErrorHalt(F(msg))
 //------------------------------------------------------------------------------
 
+#define OPT_REDUCTION 1
+#define OPT_CENTER 2
+
 #define MaxJPEG 100
 int numJPEG;
 uint16_t JPEGIndex[MaxJPEG];
@@ -77,9 +80,9 @@ void loop(void) {
   // Get JPEG file name
   strcpy(fname, getFileName(JPEGIndex[ipos]));
   
-  // Draw JPEG image
+  // Draw JPEG image with recuction
   tft.fillScreen(random(0x10000));
-  drawFSJpeg(fname, 0, 0);
+  drawFSJpeg(fname, 0, 0, OPT_REDUCTION + OPT_CENTER);
  
   ipos++;
   if (ipos == numJPEG) ipos = 0;
