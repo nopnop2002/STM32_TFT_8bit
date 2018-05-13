@@ -178,6 +178,5 @@ Copy JPEGS file to your SD-CARD.
 Wire TFT built-in SD-CARD Reader to STM32.   
 Execute JpegView_240x320_SMT32.   
 
-![jpegview](https://user-images.githubusercontent.com/6020549/38765746-2997e69a-4002-11e8-9117-43395f7325a1.JPG)
-
+![jpegview-2](https://user-images.githubusercontent.com/6020549/39962758-a9b65e36-5693-11e8-9f67-d36a92a71fb1.JPG)
 
