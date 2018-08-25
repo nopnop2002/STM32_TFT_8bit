@@ -26,8 +26,8 @@ Using GPIOA as Data Port
 |LCD_RST|--|PB7|
 |LCD_CS|--|PB6|
 |LCD_RS|--|PB5|
-|LCD_WR|--|PB4|
-|LCD_RD|--|PB3|
+|LCD_WR|--|PB4(*2)|
+|LCD_RD|--|PB3(*2)|
 |LCD_D0|--|PA0|
 |LCD_D1|--|PA1|
 |LCD_D2|--|PA2|
@@ -49,8 +49,8 @@ Using GPIOC as Data Port
 |LCD_RST|--|PB7|
 |LCD_CS|--|PB6|
 |LCD_RS|--|PB5|
-|LCD_WR|--|PB4|
-|LCD_RD|--|PB3|
+|LCD_WR|--|PB4(*2)|
+|LCD_RD|--|PB3(*2)|
 |LCD_D0|--|PC0|
 |LCD_D1|--|PC1|
 |LCD_D2|--|PC2|
@@ -65,6 +65,9 @@ Using GPIOC as Data Port
 
 \*When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
 \*When a regulator is NOT mounted on the back, it's operated 3.3V.   
+
+\*2This port is used as JTAG.You need remap.   
+afio_cfg_debug_ports(AFIO_DEBUG_NONE)   
 
 Pin define is "STM32_TFT_8bit.h"   
 
