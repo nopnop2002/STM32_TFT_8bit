@@ -63,8 +63,8 @@ Using GPIOC as Data Port
 |3.3V|--|3.3V(*)|
 |GND|--|GND|
 
-(*)When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
-(*)When a regulator is NOT mounted on the back, it's operated 3.3V.   
+(\*)When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
+(\*)When a regulator is NOT mounted on the back, it's operated 3.3V.   
 
 (*2)By several boards, This port is used as JTAG.   
 You need remap.   
