@@ -93,7 +93,7 @@ RM68140 3.95inch 320x480
 If your TFT's resolution is 320x480,   
 you have to set your TFT's resolution using tft.setResoution.   
 
-Exsample:   
+Example:   
 ```
 ID = tft.readID();
 tft.setResolution(320, 480); // Set your resolution
@@ -108,7 +108,7 @@ Serial.print("Height: "); Serial.println(height); // You will see 480
 If your TFT's resolution is 240x400,   
 you have to set your TFT's resolution and TFT's offset.   
 
-Exsample:   
+Example:   
 ```
 ID = tft.readID();
 tft.setResolution(240, 400); // Set your resolution
