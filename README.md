@@ -148,6 +148,12 @@ Serial.print("Height: "); Serial.println(height); // You will see 400
 
 ----
 
+# F4 board support   
+If you want more speed, plase use [this].(https://github.com/nopnop2002/Arduino-STM32-8bitTFT)   
+F4 board is very fast.   
+
+----
+
 # JPEG Viewer    
 
 Viewer of a JPEG file in the SD card.   
