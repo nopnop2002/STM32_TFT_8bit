@@ -1,5 +1,5 @@
 # STM32_TFT_8bit
-8bit TFT Library for Arduino_STM32
+8bit TFT Library for Arduino_STM32(MAPLE Core)
 
 I ported from here.   
 https://github.com/prenticedavid/MCUFRIEND_kbv   
