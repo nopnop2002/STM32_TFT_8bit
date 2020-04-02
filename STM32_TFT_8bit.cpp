@@ -1036,7 +1036,6 @@ void STM32_TFT_8bit::fillScreen(uint16_t color) {
 /*
 * Draw lines faster by calculating straight sections and drawing them with fastVline and fastHline.
 */
-#if defined (__STM32F1__)
 void STM32_TFT_8bit::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint16_t color) {
 
   int16_t i;
@@ -1098,7 +1097,6 @@ void STM32_TFT_8bit::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, ui
   }
 }
 
-#endif
 
 
 // Pass 8-bit (each) R,G,B, get back 16-bit packed color
