@@ -77,10 +77,10 @@ int cube2_r[] = {
   0, 0, 0
 };
 
-uint16 cube1_x, cube1_y, cube2_x, cube2_y, cube1_color, cube2_color;
+uint16_t cube1_x, cube1_y, cube2_x, cube2_y, cube1_color, cube2_color;
 
 
-void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint16 *x, uint16 *y, uint16 *color) {
+void cube(float *px, float *py, float *pz, float *p2x, float *p2y, int *r, uint16_t *x, uint16_t *y, uint16_t *color) {
 
   for (int i = 0; i < 3; i++) {
     tft.drawLine(p2x[i], p2y[i], p2x[i + 1], p2y[i + 1], BACK_COLOR);
@@ -147,7 +147,7 @@ void setup() {
   cube1_color = BLACK;
   cube2_color = RED;
 
-  uint16 x = 0;
+  uint16_t x = 0;
   for (uint32_t n = 247583650 ; n > 247400000 ; n--) {
     x = sqrt (n);
     cube(cube1_px, cube1_py, cube1_pz, cube1_p2x, cube1_p2y, cube1_r, &cube1_x, &cube1_y, &cube1_color);
