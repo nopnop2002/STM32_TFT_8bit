@@ -18,8 +18,8 @@
  */
 
 
-#ifndef _ADAFRUIT_ILI9341H_
-#define _ADAFRUIT_ILI9341H_
+#ifndef _STM32_TFTH_
+#define _STM32_TFTH_
 
 #include "Arduino.h"
 #include "Print.h"
@@ -92,16 +92,14 @@ Define pins and Output Data Registers
 #define RST_ACTIVE   TFT_CNTRL->regs->BRR  = TFT_RST_MASK
 #define RST_IDLE     TFT_CNTRL->regs->BSRR  = TFT_RST_MASK
 
-#ifndef RD_STROBE
-#define RD_STROBE  {RD_ACTIVE; RD_IDLE;}
-#endif
-#define WR_STROBE { WR_ACTIVE; WR_IDLE; }
-#define swap(a, b) { int16_t t = a; a = b; b = t; }
+#define RD_STROBE    {RD_ACTIVE; RD_IDLE;}  // Not used
+#define WR_STROBE    {WR_ACTIVE; WR_IDLE;}
+#define swap(a, b)   {int16_t t = a; a = b; b = t;}  // Not used
 
 
 class STM32_TFT_8bit : public Adafruit_GFX {
 
- public:
+  public:
 
   STM32_TFT_8bit(void);
   
@@ -135,7 +133,7 @@ class STM32_TFT_8bit : public Adafruit_GFX {
   uint16_t readID(void);
 
 
- private:
+  private:
   //uint8_t  tabcolor;
   uint8_t  read8(void);
   void     setReadDataBus(void);
