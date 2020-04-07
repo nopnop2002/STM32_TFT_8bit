@@ -20,16 +20,23 @@
 
 #include <Adafruit_GFX.h>
 #include "STM32_TFT_8bit.h"
-#include <SdFat.h>  // https://github.com/greiman/SdFat
-#include <JPEGDecoder.h>  // https://github.com/nopnop2002/STM32_JPEGDecorder
+#include <SdFat.h>        // https://github.com/greiman/SdFat
+#include <JPEGDecoder.h>  // https://github.com/Bodmer/JPEGDecoder
 
 STM32_TFT_8bit tft;
 
 uint32_t ID;
 
 // Use second SPI port
-SdFat SD(2);
-//SdFatEX SD(2);
+/*
+ * MOSI --- PB15
+ * MISO --- PB14
+ * SCK ---- PB13 
+ * CS ----- PB12
+ */
+SPIClass SPI_2(2);
+SdFat SD(&SPI_2);
+// SdFatEX SD(&SPI_2);
 const uint8_t SD_CS = PB12;   // chip select for sd2
 
 //------------------------------------------------------------------------------
