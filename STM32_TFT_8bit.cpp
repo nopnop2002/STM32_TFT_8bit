@@ -81,23 +81,22 @@ void STM32_TFT_8bit::setWriteDataBus(void) {
   // set the pins to output mode
   // not required to mask and assign, because all pins of bus are set together
   TFT_DATA->regs->CRL = 0x33333333;
-  //each pin is configured by four bits, and 0b0011 or 0x3 means output mode (same as pinmode())
+  // each pin is configured by four bits, and 0b0011 or 0x3 means output mode (same as pinmode())
 }
 
 void STM32_TFT_8bit::setReadDataBus(void) {
-  //set the pins to input mode
+  // set the pins to input mode
   // not required to mask and assign, because all pins of bus are set together
   TFT_DATA->regs->CRL = 0x88888888;
-  //8 in hex is 0b1000, which means input, same as pinmode()
+  // 8 in hex is 0b1000, which means input, same as pinmode()
   // for (uint8_t i = 0; i <= 7; i++){
   //   pinMode(DPINS[i], INPUT);
   // }
 }
 
 void STM32_TFT_8bit::write8(uint8_t c) {
-
-  //BRR or BSRR avoid read, mask write cycle time
-  //BSRR is 32 bits wide. 1's in the most significant 16 bits signify pins to reset (clear)
+  // BRR or BSRR avoid read, mask write cycle time
+  // BSRR is 32 bits wide. 1's in the most significant 16 bits signify pins to reset (clear)
   // 1's in least significant 16 bits signify pins to set high. 0's mean 'do nothing'
   TFT_DATA->regs->BSRR = ((~c)<<16) | (c); //Set pins to the 8 bit number
   //TFT_DATA->regs->ODR = ((TFT_DATA->regs->ODR & 0xFF00) | ((c) & 0x00FF));//FF00 is Binary 1111111100000000
