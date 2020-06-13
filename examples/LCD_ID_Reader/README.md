@@ -74,5 +74,5 @@ reg(0x00F2) 00 18 A3 12 02 B2 12 FF 10 00 00 00	Adjust Control 2
 reg(0x00F6) 00 54 80 66	Interface Control
 ```
 
-From the output of 0x00D3, you can see that this is ILI9486.
+From the output of 0x00D3, you can see that the controller is ILI9486.
 
