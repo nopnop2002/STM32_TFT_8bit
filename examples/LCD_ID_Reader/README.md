@@ -19,12 +19,12 @@ This is a tool to find the TFT controller.
 |LCD_D5|--|PA5|
 |LCD_D6|--|PA6|
 |LCD_D7|--|PA7|
-|5V|--|5V(*)|
-|3.3V|--|3.3V(*)|
+|5V|--|5V(*1)|
+|3.3V|--|3.3V(*1)|
 |GND|--|GND|
 
-(\*)When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
-(\*)When a regulator is NOT mounted on the back, it's operated 3.3V.   
+(*1)When a regulator(It's often AMS1117) is mounted on the back, it's operated 5V.   
+When a regulator is NOT mounted on the back, it's operated 3.3V.   
 
 (*2)By several boards, This port is used as JTAG.   
 You need remap.   
