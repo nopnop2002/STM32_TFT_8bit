@@ -672,11 +672,13 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
       table8_ads = ILI9342_regValues_CPT24, table_size = sizeof(ILI9342_regValues_CPT24);   //
       //table8_ads = ILI9342_regValues_Tianma23, table_size = sizeof(ILI9342_regValues_Tianma23);   //
       //table8_ads = ILI9342_regValues_HSD23, table_size = sizeof(ILI9342_regValues_HSD23);   //
-
+#if 0
+//To change the resolution, use tft.setResolution().
       p16 = (int16_t *) & HEIGHT;
       *p16 = 240;
       p16 = (int16_t *) & WIDTH;
       *p16 = 320;
+#endif
     break;
 
     case 0x1581:                        //no BGR in MADCTL.  set BGR in Panel Control
@@ -774,8 +776,62 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 //        table8_ads = ILI9481_AUO317_regValues, table_size = sizeof(ILI9481_AUO317_regValues);
 //        table8_ads = ILI9481_CMO35_regValues, table_size = sizeof(ILI9481_CMO35_regValues);
 //        table8_ads = ILI9481_RGB_regValues, table_size = sizeof(ILI9481_RGB_regValues);
-
+#if 0
+//To change the resolution, use tft.setResolution().
+        p16 = (int16_t *) & HEIGHT;
+        *p16 = 480;
+        p16 = (int16_t *) & WIDTH;
+        *p16 = 320;
+#endif
     break;
+
+// Add 202-06-13 ILI9486
+    case 0x9486:
+        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS; //Red 3.5", Blue 3.5"
+//        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | REV_SCREEN; //old Red 3.5"
+        static const uint8_t ILI9486_regValues[] PROGMEM = {
+            0xC0, 2, 0x0d, 0x0d,        //Power Control 1 [0E 0E]
+            0xC1, 2, 0x43, 0x00,        //Power Control 2 [43 00]
+            0xC2, 1, 0x00,      //Power Control 3 [33]
+            0xC5, 4, 0x00, 0x48, 0x00, 0x48,    //VCOM  Control 1 [00 40 00 40]
+            0xB4, 1, 0x00,      //Inversion Control [00]
+            0xB6, 3, 0x02, 0x02, 0x3B,  // Display Function Control [02 02 3B]
+#define GAMMA9486 4
+#if GAMMA9486 == 0
+            // default GAMMA terrible
+#elif GAMMA9486 == 1
+            // GAMMA f.k.	bad		
+            0xE0, 15, 0x0f, 0x31, 0x2b, 0x0c, 0x0e, 0x08, 0x4e, 0xf1, 0x37, 0x07, 0x10, 0x03, 0x0e, 0x09, 0x00,
+            0xE1, 15, 0x00, 0x0e, 0x14, 0x03, 0x11, 0x07, 0x31, 0xC1, 0x48, 0x08, 0x0f, 0x0c, 0x31, 0x36, 0x0f,
+#elif GAMMA9486 == 2
+            // 1.2 CPT 3.5 Inch Initial Code not bad
+			0xE0, 15, 0x0F, 0x1B, 0x18, 0x0B, 0x0E, 0x09, 0x47, 0x94, 0x35, 0x0A, 0x13, 0x05, 0x08, 0x03, 0x00, 
+			0xE1, 15, 0x0F, 0x3A, 0x37, 0x0B, 0x0C, 0x05, 0x4A, 0x24, 0x39, 0x07, 0x10, 0x04, 0x27, 0x25, 0x00, 
+#elif GAMMA9486 == 3
+            // 2.2 HSD 3.5 Inch Initial Code not bad
+			0xE0, 15, 0x0F, 0x1F, 0x1C, 0x0C, 0x0F, 0x08, 0x48, 0x98, 0x37, 0x0A, 0x13, 0x04, 0x11, 0x0D, 0x00, 
+			0xE1, 15, 0x0F, 0x32, 0x2E, 0x0B, 0x0D, 0x05, 0x47, 0x75, 0x37, 0x06, 0x10, 0x03, 0x24, 0x20, 0x00, 
+#elif GAMMA9486 == 4
+            // 3.2 TM  3.2 Inch Initial Code not bad
+			0xE0, 15, 0x0F, 0x21, 0x1C, 0x0B, 0x0E, 0x08, 0x49, 0x98, 0x38, 0x09, 0x11, 0x03, 0x14, 0x10, 0x00, 
+			0xE1, 15, 0x0F, 0x2F, 0x2B, 0x0C, 0x0E, 0x06, 0x47, 0x76, 0x37, 0x07, 0x11, 0x04, 0x23, 0x1E, 0x00, 
+#elif GAMMA9486 == 5
+            // 4.2 WTK 3.5 Inch Initial Code too white
+			0xE0, 15, 0x0F, 0x10, 0x08, 0x05, 0x09, 0x05, 0x37, 0x98, 0x26, 0x07, 0x0F, 0x02, 0x09, 0x07, 0x00, 
+			0xE1, 15, 0x0F, 0x38, 0x36, 0x0D, 0x10, 0x08, 0x59, 0x76, 0x48, 0x0A, 0x16, 0x0A, 0x37, 0x2F, 0x00, 
+#endif
+        };
+        table8_ads = ILI9486_regValues, table_size = sizeof(ILI9486_regValues);
+#if 0
+//To change the resolution, use tft.setResolution().
+        p16 = (int16_t *) & HEIGHT;
+        *p16 = 480;
+        p16 = (int16_t *) & WIDTH;
+        *p16 = 320;
+#endif
+    break;
+
+
 
     case 0x6814:
         _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS;
