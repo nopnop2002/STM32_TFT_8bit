@@ -4,8 +4,6 @@ This is a tool to find the TFT controller.
 
 # Wirering for 8bit Parallel TFT   
 
-Using GPIOA as Data Port   
-
 |TFT||STM32F103|
 |:-:|:-:|:-:|
 |LCD_RST|--|PB7|
