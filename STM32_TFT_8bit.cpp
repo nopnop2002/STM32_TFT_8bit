@@ -672,13 +672,10 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
       table8_ads = ILI9342_regValues_CPT24, table_size = sizeof(ILI9342_regValues_CPT24);   //
       //table8_ads = ILI9342_regValues_Tianma23, table_size = sizeof(ILI9342_regValues_Tianma23);   //
       //table8_ads = ILI9342_regValues_HSD23, table_size = sizeof(ILI9342_regValues_HSD23);   //
-#if 0
-//To change the resolution, use tft.setResolution().
       p16 = (int16_t *) & HEIGHT;
       *p16 = 240;
       p16 = (int16_t *) & WIDTH;
       *p16 = 320;
-#endif
     break;
 
     case 0x1581:                        //no BGR in MADCTL.  set BGR in Panel Control

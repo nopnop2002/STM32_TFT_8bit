@@ -85,6 +85,7 @@ LGDP4532 2.4inch 240x320
 ILI9481 3.5inch 320x480   
 ILI9486 3.5inch 320x480   
 R61509V 3.6inch 240x400   
+ST7793 3.6inch 240x400   
 RM68140 3.95inch 320x480   
 
 ----
@@ -124,28 +125,17 @@ Serial.print("Height: "); Serial.println(height); // You will see 400
 
 ---
 
-# R61505 2.4 inch TFT
-![r61505](https://user-images.githubusercontent.com/6020549/34552852-70d1e6bc-f167-11e7-8df9-41587ebccc79.JPG)
+- SPFD5408 + ILI9486   
+![8BIT_TFT-1](https://user-images.githubusercontent.com/6020549/84582637-a4ccd180-ae29-11ea-85f7-eb6881d6548d.JPG)
 
----
+- ILI9325 + ILI9481   
+![8BIT_TFT-2](https://user-images.githubusercontent.com/6020549/84582638-a7c7c200-ae29-11ea-876e-98f5462fcaf8.JPG)
 
-# SPFD5408 2.4 inch TFT
-![spfd5408](https://user-images.githubusercontent.com/6020549/34552862-7ae8d62e-f167-11e7-84dd-73b07476cd50.JPG)
+- ILI9341 + ST7793   
+![8BIT_TFT-3](https://user-images.githubusercontent.com/6020549/84582639-a9918580-ae29-11ea-9d53-57721d7cef9e.JPG)
 
----
-
-# ILI9325 2.4 inch TFT
-![ili9325](https://user-images.githubusercontent.com/6020549/34552868-848b0fd0-f167-11e7-92f1-9c07e741a33e.JPG)
-
----
-
-# ILI9341 2.4 inch TFT
-![ili9341](https://user-images.githubusercontent.com/6020549/34552875-8eb6c832-f167-11e7-9c8c-7e3e602887d3.JPG)
-
----
-
-# ILI9342 2.4 inch TFT
-![ili9342](https://user-images.githubusercontent.com/6020549/34552887-9aa02fb2-f167-11e7-8ca6-6517de127a4a.JPG)
+- ILI9342 + R61509V   
+![8BIT_TFT-4](https://user-images.githubusercontent.com/6020549/84582789-8536a880-ae2b-11ea-9ed2-a99bf8d0e495.JPG)
 
 ----
 
