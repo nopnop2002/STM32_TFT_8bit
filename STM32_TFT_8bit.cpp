@@ -782,7 +782,7 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 #endif
     break;
 
-// Add 202-06-13 ILI9486
+// Add 2020-06-13
     case 0x9486:
         _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS; //Red 3.5", Blue 3.5"
 //        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | REV_SCREEN; //old Red 3.5"
@@ -828,7 +828,36 @@ void STM32_TFT_8bit::begin(uint16_t ID) {
 #endif
     break;
 
-
+// Add 202-07-12
+    case 0x7796:
+        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS;   //thanks to safari1
+        goto common_9488;
+    case 0x9487:                //with thanks to Charlyf
+    case 0x9488:
+        _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS | READ_24BITS;
+      common_9488:
+        static const uint8_t ILI9488_regValues_max[] PROGMEM = {        // Atmel MaxTouch
+            0xC0, 2, 0x10, 0x10,        //Power Control 1 [0E 0E]
+            0xC1, 1, 0x41,      //Power Control 2 [43]
+            0xC5, 4, 0x00, 0x22, 0x80, 0x40,    //VCOM  Control 1 [00 40 00 40]
+            0x36, 1, 0x68,      //Memory Access [00]
+            0xB0, 1, 0x00,      //Interface     [00]
+            0xB1, 2, 0xB0, 0x11,        //Frame Rate Control [B0 11]
+            0xB4, 1, 0x02,      //Inversion Control [02]
+            0xB6, 3, 0x02, 0x02, 0x3B,  // Display Function Control [02 02 3B] .kbv NL=480
+            0xB7, 1, 0xC6,      //Entry Mode      [06]
+            0x3A, 1, 0x55,      //Interlace Pixel Format [XX]
+            0xF7, 4, 0xA9, 0x51, 0x2C, 0x82,    //Adjustment Control 3 [A9 51 2C 82]
+        };
+        table8_ads = ILI9488_regValues_max, table_size = sizeof(ILI9488_regValues_max);
+#if 0
+//To change the resolution, use tft.setResolution().
+        p16 = (int16_t *) & HEIGHT;
+        *p16 = 480;
+        p16 = (int16_t *) & WIDTH;
+        *p16 = 320;
+#endif
+        break;
 
     case 0x6814:
         _lcd_capable = AUTO_READINC | MIPI_DCS_REV1 | MV_AXIS;

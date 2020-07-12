@@ -87,6 +87,7 @@ ST7793 3.6inch 240x400
 ILI9481 3.5inch 320x480   
 ILI9486 3.5inch 320x480   
 RM68140 3.95inch 320x480   
+ST7796 3.95inch 320x480   
 
 ----
 
@@ -136,6 +137,9 @@ Serial.print("Height: "); Serial.println(height); // You will see 400
 
 - ILI9342 + R61509V   
 ![8BIT_TFT-4](https://user-images.githubusercontent.com/6020549/84582789-8536a880-ae2b-11ea-9ed2-a99bf8d0e495.JPG)
+
+- ST7783 + ST7796
+![8BIT_TFT-5](https://user-images.githubusercontent.com/6020549/87236076-4b06f980-c41f-11ea-976e-97eaba22e8fa.JPG)
 
 ----
 
