@@ -75,19 +75,29 @@ Pin define is "STM32_TFT_8bit.h"
 ----
 
 # Tested TFT    
-ILI9325 2.4inch 240x320   
-ILI9341 2.4inch 240x320   
-ILI9342 2.4inch 240x320   
-SPFD5408 2.4inch 240x320   
-R61505 2.4inch 240x320   
-ST7783 2.4inch 240x320   
-LGDP4532 2.4inch 240x320   
-R61509V 3.6inch 240x400   
-ST7793 3.6inch 240x400   
-ILI9481 3.5inch 320x480   
-ILI9486 3.5inch 320x480   
-RM68140 3.95inch 320x480   
-ST7796 3.95inch 320x480   
+- ILI9325 2.4inch 240x320 TFT-Shield  
+- ILI9341 2.4inch 240x320 TFT-Shield   
+- ILI9342 2.4inch 240x320 TFT-Shield   
+- SPFD5408 2.4inch 240x320 TFT-Shield   
+- R61505 2.4inch 240x320 TFT-Shield   
+- ST7783 2.4inch 240x320 TFT-Shield   
+- LGDP4532 2.4inch 240x320 TFT-Shield   
+- R61509V 3.6inch 240x400 TFT-Shield   
+- ST7793 3.6inch 240x400 TFT-Shield   
+- ILI9481 3.5inch 320x480 TFT-Shield   
+- ILI9486 3.5inch 320x480 TFT-Shield   
+- RM68140 3.95inch 320x480 TFT-Shield   
+- ST7796 3.95inch 320x480 TFT-Shield   
+- OPEN-SMART ILI9225 TFT-Shield   
+- OPEN-SMART ILI9327 TFT-Shield   
+- OPEN-SMART ILI9340 TFT-Shield   
+
+I found that these display cannot follow high-speed GPIO-ON and GPIO-OFF.   
+- OPEN-SMART S6D1121 16Pin-Parallel   
+- OPEN-SMART ST7775 16Pin-Parallel   
+- OPEN-SMART ST7783 16Pin-Parallel   
+- OPEN-SMART R61509V 16Pin-Parallel   
+- OPEN-SMART ILI9488 16Pin-Parallel   
 
 ----
 
